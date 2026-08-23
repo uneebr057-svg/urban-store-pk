@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Urban Store PK — Quality Products at Great Prices</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f5f7fb;color:#111827}
+header{background:#0f172a;color:#fff;padding:18px 5%;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
+.logo{font-size:25px;font-weight:800}.tag{font-size:14px}.cartbtn{background:#10b981;border:0;color:#fff;padding:11px 16px;border-radius:8px;font-weight:700;cursor:pointer}
+.hero{text-align:center;background:#fff;padding:55px 20px 45px}.hero h1{font-size:42px;margin:0 0 12px}.hero p{font-size:18px;color:#64748b}
+.notice{max-width:1050px;margin:24px auto;padding:16px 20px;background:#ecfeff;border:1px solid #67e8f9;border-radius:12px}
+.container{max-width:1100px;margin:auto;padding:10px 20px 60px}
+.toolbar{display:flex;gap:10px;justify-content:space-between;align-items:center;margin:22px 0;flex-wrap:wrap}
+.search{padding:12px 15px;border:1px solid #cbd5e1;border-radius:9px;width:min(420px,100%);font-size:15px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
+.card{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 5px 18px #00000010;border:1px solid #e5e7eb}
+.photo{height:190px;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-size:72px}
+.body{padding:17px}.body h3{margin:0 0 8px;font-size:19px}.desc{color:#64748b;min-height:42px;font-size:14px}.price{font-size:22px;font-weight:800;margin:12px 0}.old{text-decoration:line-through;color:#94a3b8;font-size:14px;margin-left:5px}
+.btn{width:100%;padding:12px;border:0;border-radius:8px;background:#0f172a;color:#fff;font-weight:700;cursor:pointer}.btn:hover{background:#1e293b}
+#cart{position:fixed;right:0;top:0;width:min(420px,100%);height:100%;background:#fff;z-index:30;box-shadow:-8px 0 30px #0003;transform:translateX(100%);transition:.25s;overflow:auto}
+#cart.open{transform:translateX(0)}.carthead{padding:18px;background:#0f172a;color:#fff;display:flex;justify-content:space-between}.close{background:none;border:0;color:#fff;font-size:25px;cursor:pointer}
+.cartitems{padding:15px}.item{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid #e5e7eb}.qty button{border:1px solid #cbd5e1;background:#fff;border-radius:5px;padding:2px 8px;cursor:pointer}
+.total{font-size:22px;font-weight:800;padding:15px;border-top:2px solid #e5e7eb}.checkout{padding:15px}.checkout input,.checkout textarea{width:100%;padding:11px;margin:6px 0 10px;border:1px solid #cbd5e1;border-radius:7px}.checkout button{width:100%;padding:13px;border:0;border-radius:8px;background:#10b981;color:white;font-weight:800;cursor:pointer}
+footer{background:#0f172a;color:#cbd5e1;text-align:center;padding:25px}
+@media(max-width:600px){.hero h1{font-size:30px}header{padding:15px}.tag{display:none}}
+.photo img{width:100%;height:100%;object-fit:cover;display:block}
+</style>
+</head>
+<body>
+<header><div class="logo">Urban Store PK</div><div class="tag">Cash on Delivery • Pakistan</div><button class="cartbtn" onclick="openCart()">🛒 Cart (<span id="count">0</span>)</button></header>
+
+<section class="hero"><h1>Quality Products at Great Prices</h1><p>Shop online with Cash on Delivery across Pakistan.</p><p><b>Delivery Charges: Rs. 165</b></p></section>
+<div class="notice"><b>Welcome to Urban Store PK</b><br>Browse products, open details, add items to your cart and place your COD order directly on our website. No supplier website redirect.</div>
+
+<main class="container">
+<div class="toolbar"><h2>Our Products</h2><input id="search" class="search" placeholder="Search products..." oninput="render()"></div>
+<div id="grid" class="grid"></div>
+</main>
+
+<aside id="cart">
+<div class="carthead"><b>Your Cart</b><button class="close" onclick="closeCart()">×</button></div>
+<div id="cartitems" class="cartitems"></div>
+<div class="total">Total: Rs. <span id="total">0</span></div>
+<div class="checkout">
+<h3>Cash on Delivery</h3>
+<input id="name" placeholder="Full Name *">
+<input id="phone" placeholder="Mobile Number *">
+<input id="address" placeholder="Complete Address *">
+<textarea id="notes" rows="3" placeholder="City / Order notes"></textarea>
+<button onclick="placeOrder()">Place COD Order</button>
+<p id="msg" style="font-size:13px;color:#64748b"></p>
+</div>
+</aside>
+
+<footer>© 2026 Urban Store PK • Cash on Delivery • Pakistan</footer>
+
+<script>
+const products=[
+["Premium Leather Wallet for Men","Stylish everyday wallet with multiple card slots.","999","images/wallet-1.jpg"],
+["Premium Leather Wallet - Inside View","Card slots and multiple compartments.","999","images/wallet-2.jpg"],
+["Premium Leather Wallet - ID Window","Wallet with ID window and card storage.","999","images/wallet-3.jpg"],
+["Premium Leather Wallet - Colors","Available in Black, Brown and Tan.","999","images/wallet-4.jpg"],
+["Stylish LED Watch","Simple LED display watch for everyday wear.","999","⌚"],
+["Men's Classic Analogue Watch","Clean analogue design for casual and formal wear.","1499","⌚"],
+["Premium Men's Snap Long Wallet","Long wallet with multiple compartments.","1299","💼"],
+["Classic Card Holder","Compact card holder for daily use.","699","💳"],
+["Men's Casual Sunglasses","Trendy everyday sunglasses.","899","😎"],
+["Stainless Steel Keychain","Durable keychain for everyday use.","499","🔑"],
+["Travel Toiletry Bag","Compact organizer for travel essentials.","1099","🧳"],
+["Men's Casual Cap","Comfortable cap for everyday style.","799","🧢"],
+["Minimalist Bracelet","Simple fashion bracelet for men.","699","📿"],
+["Phone Stand Holder","Desk phone stand for home or office.","599","📱"],
+["Car Mobile Holder","Easy-to-use holder for car dashboard.","899","🚗"],
+["Wireless Mini Earbuds Case","Compact protective case/accessory.","799","🎧"],
+["Multi-Purpose Organizer","Useful organizer for small accessories.","899","🗂️"],
+["Fashion Crossbody Bag","Compact everyday crossbody bag.","1499","👜"]
+].map((p,i)=>({id:i,name:p[0],desc:p[1],price:+p[2],media:p[3]}));
+
+let cart=JSON.parse(localStorage.getItem("usp_cart")||"[]");
+function money(n){return n.toLocaleString("en-PK")}
+function render(){
+ const q=document.getElementById("search").value.toLowerCase();
+ document.getElementById("grid").innerHTML=products.filter(p=>p.name.toLowerCase().includes(q)||p.desc.toLowerCase().includes(q)).map(p=>`
+ <article class="card">
+  <div class="photo">${p.media.startsWith("images/") ? `<img src="${p.media}" alt="${p.name}">` : p.media}</div><div class="body">
+   <h3>${p.name}</h3><div class="desc">${p.desc}</div>
+   <div class="price">Rs. ${money(p.price)}</div>
+   <button class="btn" onclick="add(${p.id})">Add to Cart</button>
+  </div>
+ </article>`).join("");
+}
+function save(){localStorage.setItem("usp_cart",JSON.stringify(cart));renderCart()}
+function add(id){let x=cart.find(i=>i.id===id);x?x.qty++:cart.push({id,qty:1});save();openCart()}
+function change(id,d){let x=cart.find(i=>i.id===id);if(!x)return;x.qty+=d;if(x.qty<=0)cart=cart.filter(i=>i.id!==id);save()}
+function renderCart(){
+ let total=0,count=0;
+ document.getElementById("cartitems").innerHTML=cart.length?cart.map(i=>{let p=products.find(x=>x.id===i.id),s=p.price*i.qty;total+=s;count+=i.qty;return `<div class="item"><div><b>${p.name}</b><br>Rs. ${money(p.price)} × ${i.qty}<div class="qty"><button onclick="change(${p.id},-1)">−</button> <button onclick="change(${p.id},1)">+</button></div></div><b>Rs. ${money(s)}</b></div>`}).join(""):"<p>Your cart is empty.</p>";
+ document.getElementById("total").textContent=money(total);document.getElementById("count").textContent=count;
+}
+function openCart(){document.getElementById("cart").classList.add("open");renderCart()}
+function closeCart(){document.getElementById("cart").classList.remove("open")}
+function placeOrder(){
+ if(!cart.length)return alert("Please add a product first.");
+ let name=document.getElementById("name").value.trim(),phone=document.getElementById("phone").value.trim(),address=document.getElementById("address").value.trim();
+ if(!name||!phone||!address)return alert("Please fill Name, Mobile Number and Complete Address.");
+ let lines=cart.map(i=>{let p=products.find(x=>x.id===i.id);return `${p.name} x${i.qty} = Rs. ${p.price*i.qty}`});
+ let total=cart.reduce((s,i)=>s+products.find(p=>p.id===i.id).price*i.qty,0);
+ const order=`Urban Store PK COD Order%0A%0ACustomer: ${encodeURIComponent(name)}%0APhone: ${encodeURIComponent(phone)}%0AAddress: ${encodeURIComponent(address)}%0A%0AItems:%0A${encodeURIComponent(lines.join("\n"))}%0A%0ATotal: Rs. ${total}`;
+ document.getElementById("msg").textContent="Order details prepared. Connect your WhatsApp number in the code to receive orders automatically.";
+ alert("Your COD order is ready. To receive it automatically, add your WhatsApp number to the website settings/code.");
+}
+render();renderCart();
+</script>
+</body>
+</html>
