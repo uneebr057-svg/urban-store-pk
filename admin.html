@@ -7,25 +7,145 @@
 
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f5f7fb;color:#111827}
-header{background:#0f172a;color:#fff;padding:18px 5%;display:flex;justify-content:space-between;align-items:center}
-.logo{font-size:24px;font-weight:800}
-.logout{background:#ef4444;color:#fff;border:0;padding:10px 15px;border-radius:7px;cursor:pointer}
-.container{max-width:1100px;margin:auto;padding:30px 20px}
-.card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:22px;margin-bottom:25px}
-h2{margin-top:0}
-input,textarea{width:100%;padding:11px;margin:6px 0 12px;border:1px solid #cbd5e1;border-radius:7px}
-button{border:0;border-radius:7px;padding:11px 16px;cursor:pointer;font-weight:700}
-.primary{background:#10b981;color:#fff}
-.blue{background:#2563eb;color:#fff}
-.danger{background:#ef4444;color:#fff}
-table{width:100%;border-collapse:collapse}
-th,td{padding:12px;border-bottom:1px solid #e5e7eb;text-align:left}
-img{width:70px;height:60px;object-fit:cover;border-radius:7px}
-.login{max-width:420px;margin:80px auto}
-.hidden{display:none}
-.msg{margin-top:10px;color:#475569}
-.profit{font-weight:800;color:#10b981}
+
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f5f7fb;
+  color:#111827;
+}
+
+header{
+  background:#0f172a;
+  color:#fff;
+  padding:18px 5%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.logo{
+  font-size:24px;
+  font-weight:800;
+}
+
+.logout{
+  background:#ef4444;
+  color:#fff;
+  border:0;
+  padding:10px 15px;
+  border-radius:7px;
+  cursor:pointer;
+}
+
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:30px 20px;
+}
+
+.card{
+  background:#fff;
+  border:1px solid #e5e7eb;
+  border-radius:12px;
+  padding:22px;
+  margin-bottom:25px;
+}
+
+h2{
+  margin-top:0;
+}
+
+input,textarea{
+  width:100%;
+  padding:11px;
+  margin:6px 0 12px;
+  border:1px solid #cbd5e1;
+  border-radius:7px;
+}
+
+button{
+  border:0;
+  border-radius:7px;
+  padding:11px 16px;
+  cursor:pointer;
+  font-weight:700;
+}
+
+.primary{
+  background:#10b981;
+  color:#fff;
+}
+
+.danger{
+  background:#ef4444;
+  color:#fff;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th,td{
+  padding:12px;
+  border-bottom:1px solid #e5e7eb;
+  text-align:left;
+}
+
+.product-image{
+  width:70px;
+  height:60px;
+  object-fit:cover;
+  border-radius:7px;
+}
+
+.preview-image{
+  width:120px;
+  height:100px;
+  object-fit:cover;
+  border-radius:10px;
+  margin-top:8px;
+  display:none;
+}
+
+.login{
+  max-width:420px;
+  margin:80px auto;
+}
+
+.hidden{
+  display:none;
+}
+
+.msg{
+  margin-top:10px;
+  color:#475569;
+}
+
+.profit{
+  font-weight:800;
+  color:#10b981;
+}
+
+.upload-label{
+  display:inline-block;
+  background:#2563eb;
+  color:#fff;
+  padding:11px 16px;
+  border-radius:7px;
+  cursor:pointer;
+  font-weight:700;
+}
+
+#imageFile{
+  display:none;
+}
+
+.upload-status{
+  margin-top:8px;
+  color:#475569;
+}
 </style>
 </head>
 
@@ -39,148 +159,259 @@ img{width:70px;height:60px;object-fit:cover;border-radius:7px}
 <div class="container">
 
   <div id="loginBox" class="card login">
+
     <h2>Admin Login</h2>
 
-    <input id="email" type="email" placeholder="Admin Email">
-    <input id="password" type="password" placeholder="Password">
+    <input
+      id="email"
+      type="email"
+      placeholder="Admin Email">
 
-    <button class="primary" id="loginBtn">Login</button>
+    <input
+      id="password"
+      type="password"
+      placeholder="Password">
+
+    <button
+      class="primary"
+      id="loginBtn">
+      Login
+    </button>
 
     <div id="loginMsg" class="msg"></div>
+
   </div>
+
 
   <div id="adminPanel" class="hidden">
 
     <div class="card">
+
       <h2>Add New Product</h2>
 
       <label>Product Name</label>
-      <input id="productName" placeholder="e.g. Premium Leather Wallet">
+
+      <input
+        id="productName"
+        placeholder="e.g. Premium Leather Wallet">
+
 
       <label>Description</label>
-      <textarea id="productDescription" placeholder="Product description"></textarea>
+
+      <textarea
+        id="productDescription"
+        placeholder="Product description"></textarea>
+
 
       <label>Cost Price</label>
-      <input id="costPrice" type="number" placeholder="e.g. 630">
+
+      <input
+        id="costPrice"
+        type="number"
+        placeholder="e.g. 630">
+
 
       <label>Selling Price</label>
-      <input id="sellingPrice" type="number" placeholder="e.g. 999">
 
-      <label>Image URL</label>
-      <input id="imageUrl" placeholder="https://...">
+      <input
+        id="sellingPrice"
+        type="number"
+        placeholder="e.g. 999">
 
-      <div id="profitPreview" class="profit">
+
+      <label>Product Image</label>
+
+      <br><br>
+
+      <label
+        for="imageFile"
+        class="upload-label">
+        📷 Choose Product Image
+      </label>
+
+      <input
+        id="imageFile"
+        type="file"
+        accept="image/*">
+
+      <div id="uploadStatus" class="upload-status">
+        No image selected
+      </div>
+
+      <img
+        id="imagePreview"
+        class="preview-image">
+
+
+      <div
+        id="profitPreview"
+        class="profit">
+
         Profit: Rs. 0
+
       </div>
 
       <br>
 
-      <button class="primary" id="addProductBtn">
+      <button
+        class="primary"
+        id="addProductBtn">
+
         Add Product
+
       </button>
 
-      <div id="productMsg" class="msg"></div>
+      <div
+        id="productMsg"
+        class="msg">
+      </div>
+
     </div>
 
+
     <div class="card">
+
       <h2>Products</h2>
 
       <div style="overflow-x:auto">
+
         <table>
+
           <thead>
+
             <tr>
+
               <th>Image</th>
               <th>Product</th>
               <th>Cost</th>
               <th>Selling</th>
               <th>Profit</th>
               <th>Action</th>
+
             </tr>
+
           </thead>
 
           <tbody id="productsTable">
           </tbody>
+
         </table>
+
       </div>
+
     </div>
 
+
     <div class="card">
+
       <h2>Orders</h2>
 
       <div style="overflow-x:auto">
+
         <table>
+
           <thead>
+
             <tr>
+
               <th>Customer</th>
               <th>Phone</th>
               <th>Address</th>
               <th>Total</th>
               <th>Status</th>
+
             </tr>
+
           </thead>
 
           <tbody id="ordersTable">
           </tbody>
+
         </table>
+
       </div>
+
     </div>
 
   </div>
 
 </div>
 
+
 <script type="module">
 
 import { createClient }
 from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
+
 const SUPABASE_URL =
 "https://tthkmezmyvnjufnrbezp.supabase.co";
+
 
 const SUPABASE_KEY =
 "sb_publishable_Pi3JraUChkZ_f5xGukdrlQ_f4Vzvhqw";
 
+
 const supabase =
-createClient(SUPABASE_URL, SUPABASE_KEY);
+createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
 
 const loginBox =
 document.getElementById("loginBox");
 
+
 const adminPanel =
 document.getElementById("adminPanel");
 
+
 const loginMsg =
 document.getElementById("loginMsg");
+
 
 async function checkLogin(){
 
   const { data } =
   await supabase.auth.getSession();
 
+
   if(data.session){
 
     loginBox.classList.add("hidden");
+
     adminPanel.classList.remove("hidden");
 
     loadProducts();
+
     loadOrders();
 
   }else{
 
     loginBox.classList.remove("hidden");
+
     adminPanel.classList.add("hidden");
 
   }
+
 }
 
-document.getElementById("loginBtn")
+
+document
+.getElementById("loginBtn")
 .addEventListener("click", async () => {
 
   const email =
-  document.getElementById("email").value.trim();
+  document.getElementById("email")
+  .value
+  .trim();
+
 
   const password =
-  document.getElementById("password").value;
+  document.getElementById("password")
+  .value;
+
 
   if(!email || !password){
 
@@ -188,29 +419,41 @@ document.getElementById("loginBtn")
     "Email aur password enter karein.";
 
     return;
+
   }
 
-  loginMsg.textContent = "Logging in...";
+
+  loginMsg.textContent =
+  "Logging in...";
+
 
   const { error } =
   await supabase.auth.signInWithPassword({
+
     email,
     password
+
   });
+
 
   if(error){
 
     loginMsg.textContent =
-    "Login failed: " + error.message;
+    "Login failed: " +
+    error.message;
 
     return;
+
   }
+
 
   checkLogin();
 
 });
 
-document.getElementById("logoutBtn")
+
+document
+.getElementById("logoutBtn")
 .addEventListener("click", async () => {
 
   await supabase.auth.signOut();
@@ -219,62 +462,136 @@ document.getElementById("logoutBtn")
 
 });
 
+
 const costInput =
 document.getElementById("costPrice");
 
+
 const sellingInput =
 document.getElementById("sellingPrice");
+
 
 function calculateProfit(){
 
   const cost =
   Number(costInput.value) || 0;
 
+
   const selling =
   Number(sellingInput.value) || 0;
+
 
   const profit =
   selling - cost;
 
-  document.getElementById("profitPreview")
+
+  document
+  .getElementById("profitPreview")
   .textContent =
-  "Profit: Rs. " + profit.toLocaleString();
+  "Profit: Rs. " +
+  profit.toLocaleString();
 
 }
+
 
 costInput.addEventListener(
 "input",
 calculateProfit
 );
 
+
 sellingInput.addEventListener(
 "input",
 calculateProfit
 );
 
-document.getElementById("addProductBtn")
+
+const imageFile =
+document.getElementById("imageFile");
+
+
+const imagePreview =
+document.getElementById("imagePreview");
+
+
+const uploadStatus =
+document.getElementById("uploadStatus");
+
+
+imageFile.addEventListener(
+"change",
+() => {
+
+  const file =
+  imageFile.files[0];
+
+
+  if(!file){
+
+    uploadStatus.textContent =
+    "No image selected";
+
+    imagePreview.style.display =
+    "none";
+
+    return;
+
+  }
+
+
+  uploadStatus.textContent =
+  "Selected: " +
+  file.name;
+
+
+  const previewUrl =
+  URL.createObjectURL(file);
+
+
+  imagePreview.src =
+  previewUrl;
+
+
+  imagePreview.style.display =
+  "block";
+
+});
+
+
+document
+.getElementById("addProductBtn")
 .addEventListener("click", async () => {
 
   const name =
-  document.getElementById("productName")
-  .value.trim();
+  document
+  .getElementById("productName")
+  .value
+  .trim();
+
 
   const description =
-  document.getElementById("productDescription")
-  .value.trim();
+  document
+  .getElementById("productDescription")
+  .value
+  .trim();
+
 
   const cost =
   Number(costInput.value);
 
+
   const price =
   Number(sellingInput.value);
 
-  const image_url =
-  document.getElementById("imageUrl")
-  .value.trim();
+
+  const file =
+  imageFile.files[0];
+
 
   const msg =
-  document.getElementById("productMsg");
+  document
+  .getElementById("productMsg");
+
 
   if(!name || !cost || !price){
 
@@ -282,18 +599,105 @@ document.getElementById("addProductBtn")
     "Product name, cost price aur selling price zaroori hain.";
 
     return;
+
   }
+
+
+  msg.textContent =
+  "Product add ho raha hai...";
+
+
+  let image_url = "";
+
+
+  if(file){
+
+    uploadStatus.textContent =
+    "Uploading image...";
+
+
+    const fileExt =
+    file.name
+    .split(".")
+    .pop();
+
+
+    const fileName =
+    Date.now() +
+    "-" +
+    Math.random()
+    .toString(36)
+    .substring(2) +
+    "." +
+    fileExt;
+
+
+    const filePath =
+    fileName;
+
+
+    const { error:
+    uploadError } =
+
+    await supabase.storage
+    .from("product-images")
+    .upload(
+      filePath,
+      file
+    );
+
+
+    if(uploadError){
+
+      msg.textContent =
+      "Image upload failed: " +
+      uploadError.message;
+
+      uploadStatus.textContent =
+      "Image upload failed";
+
+      return;
+
+    }
+
+
+    const { data:
+    publicData } =
+
+    supabase.storage
+    .from("product-images")
+    .getPublicUrl(
+      filePath
+    );
+
+
+    image_url =
+    publicData.publicUrl;
+
+
+    uploadStatus.textContent =
+    "Image uploaded successfully.";
+
+  }
+
 
   const { error } =
   await supabase
   .from("products")
   .insert([{
+
     name:name,
+
     description:description,
+
     cost_price:cost,
+
     price:price,
+
     image_url:image_url
+
   }]);
+
 
   if(error){
 
@@ -302,21 +706,48 @@ document.getElementById("addProductBtn")
     error.message;
 
     return;
+
   }
+
 
   msg.textContent =
   "Product successfully add ho gaya.";
 
-  document.getElementById("productName").value="";
-  document.getElementById("productDescription").value="";
-  costInput.value="";
-  sellingInput.value="";
-  document.getElementById("imageUrl").value="";
+
+  document
+  .getElementById("productName")
+  .value = "";
+
+
+  document
+  .getElementById("productDescription")
+  .value = "";
+
+
+  costInput.value = "";
+
+
+  sellingInput.value = "";
+
+
+  imageFile.value = "";
+
+
+  imagePreview.style.display =
+  "none";
+
+
+  uploadStatus.textContent =
+  "No image selected";
+
 
   calculateProfit();
+
+
   loadProducts();
 
 });
+
 
 async function loadProducts(){
 
@@ -324,74 +755,123 @@ async function loadProducts(){
   await supabase
   .from("products")
   .select("*")
-  .order("id",{ascending:false});
+  .order(
+    "id",
+    {ascending:false}
+  );
+
 
   const table =
-  document.getElementById("productsTable");
+  document
+  .getElementById("productsTable");
+
 
   if(error){
 
     table.innerHTML =
-    `<tr><td colspan="6">
-    ${error.message}
-    </td></tr>`;
+    `<tr>
+      <td colspan="6">
+        ${error.message}
+      </td>
+    </tr>`;
 
     return;
+
   }
 
+
   table.innerHTML =
-  (data || []).map(p => {
+  (data || [])
+  .map(p => {
 
     const profit =
     Number(p.price) -
     Number(p.cost_price || 0);
 
+
     return `
+
       <tr>
 
         <td>
+
           ${
             p.image_url
-            ? `<img src="${p.image_url}">`
-            : "📦"
+
+            ?
+
+            `<img
+              class="product-image"
+              src="${p.image_url}"
+              alt="${p.name}">`
+
+            :
+
+            "📦"
+
           }
+
         </td>
 
-        <td>${p.name}</td>
-
-        <td>
-          Rs. ${Number(p.cost_price || 0).toLocaleString()}
-        </td>
 
         <td>
-          Rs. ${Number(p.price).toLocaleString()}
+          ${p.name}
         </td>
+
+
+        <td>
+          Rs.
+          ${Number(
+            p.cost_price || 0
+          ).toLocaleString()}
+        </td>
+
+
+        <td>
+          Rs.
+          ${Number(
+            p.price
+          ).toLocaleString()}
+        </td>
+
 
         <td class="profit">
-          Rs. ${profit.toLocaleString()}
+          Rs.
+          ${profit.toLocaleString()}
         </td>
 
+
         <td>
+
           <button
             class="danger"
-            onclick="deleteProduct(${p.id})">
+            onclick="
+              deleteProduct(${p.id})
+            ">
+
             Delete
+
           </button>
+
         </td>
 
       </tr>
+
     `;
 
-  }).join("");
+  })
+  .join("");
 
 }
+
 
 window.deleteProduct =
 async function(id){
 
   if(!confirm(
-  "Kya aap ye product delete karna chahte hain?"
+    "Kya aap ye product delete karna chahte hain?"
   )) return;
+
 
   const { error } =
   await supabase
@@ -399,19 +879,23 @@ async function(id){
   .delete()
   .eq("id",id);
 
+
   if(error){
 
     alert(
-    "Delete failed: " +
-    error.message
+      "Delete failed: " +
+      error.message
     );
 
     return;
+
   }
+
 
   loadProducts();
 
 };
+
 
 async function loadOrders(){
 
@@ -419,35 +903,56 @@ async function loadOrders(){
   await supabase
   .from("orders")
   .select("*")
-  .order("id",{ascending:false});
+  .order(
+    "id",
+    {ascending:false}
+  );
+
 
   const table =
-  document.getElementById("ordersTable");
+  document
+  .getElementById("ordersTable");
+
 
   if(error){
 
     table.innerHTML =
-    `<tr><td colspan="5">
-    ${error.message}
-    </td></tr>`;
+    `<tr>
+      <td colspan="5">
+        ${error.message}
+      </td>
+    </tr>`;
 
     return;
+
   }
 
+
   table.innerHTML =
-  (data || []).map(order => {
+  (data || [])
+  .map(order => {
 
     return `
+
       <tr>
 
-        <td>${order.customer_name || ""}</td>
-
-        <td>${order.phone || ""}</td>
-
-        <td>${order.address || ""}</td>
+        <td>
+          ${order.customer_name || ""}
+        </td>
 
         <td>
-          Rs. ${Number(order.total || 0).toLocaleString()}
+          ${order.phone || ""}
+        </td>
+
+        <td>
+          ${order.address || ""}
+        </td>
+
+        <td>
+          Rs.
+          ${Number(
+            order.total || 0
+          ).toLocaleString()}
         </td>
 
         <td>
@@ -455,11 +960,14 @@ async function loadOrders(){
         </td>
 
       </tr>
+
     `;
 
-  }).join("");
+  })
+  .join("");
 
 }
+
 
 checkLogin();
 
