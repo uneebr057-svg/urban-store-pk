@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Urban Store PK — Admin Panel</title>
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f5f7fb;color:#111827}
+header{background:#0f172a;color:#fff;padding:18px 5%;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:24px;font-weight:800}
+.logout{background:#ef4444;color:#fff;border:0;padding:10px 15px;border-radius:7px;cursor:pointer}
+.container{max-width:1100px;margin:auto;padding:30px 20px}
+.card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:22px;margin-bottom:25px}
+h2{margin-top:0}
+input,textarea{width:100%;padding:11px;margin:6px 0 12px;border:1px solid #cbd5e1;border-radius:7px}
+button{border:0;border-radius:7px;padding:11px 16px;cursor:pointer;font-weight:700}
+.primary{background:#10b981;color:#fff}
+.blue{background:#2563eb;color:#fff}
+.danger{background:#ef4444;color:#fff}
+table{width:100%;border-collapse:collapse}
+th,td{padding:12px;border-bottom:1px solid #e5e7eb;text-align:left}
+img{width:70px;height:60px;object-fit:cover;border-radius:7px}
+.login{max-width:420px;margin:80px auto}
+.hidden{display:none}
+.msg{margin-top:10px;color:#475569}
+.profit{font-weight:800;color:#10b981}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">Urban Store PK — Admin</div>
+  <button class="logout" id="logoutBtn">Logout</button>
+</header>
+
+<div class="container">
+
+  <div id="loginBox" class="card login">
+    <h2>Admin Login</h2>
+
+    <input id="email" type="email" placeholder="Admin Email">
+    <input id="password" type="password" placeholder="Password">
+
+    <button class="primary" id="loginBtn">Login</button>
+
+    <div id="loginMsg" class="msg"></div>
+  </div>
+
+  <div id="adminPanel" class="hidden">
+
+    <div class="card">
+      <h2>Add New Product</h2>
+
+      <label>Product Name</label>
+      <input id="productName" placeholder="e.g. Premium Leather Wallet">
+
+      <label>Description</label>
+      <textarea id="productDescription" placeholder="Product description"></textarea>
+
+      <label>Cost Price</label>
+      <input id="costPrice" type="number" placeholder="e.g. 630">
+
+      <label>Selling Price</label>
+      <input id="sellingPrice" type="number" placeholder="e.g. 999">
+
+      <label>Image URL</label>
+      <input id="imageUrl" placeholder="https://...">
+
+      <div id="profitPreview" class="profit">
+        Profit: Rs. 0
+      </div>
+
+      <br>
+
+      <button class="primary" id="addProductBtn">
+        Add Product
+      </button>
+
+      <div id="productMsg" class="msg"></div>
+    </div>
+
+    <div class="card">
+      <h2>Products</h2>
+
+      <div style="overflow-x:auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Product</th>
+              <th>Cost</th>
+              <th>Selling</th>
+              <th>Profit</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+
+          <tbody id="productsTable">
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Orders</h2>
+
+      <div style="overflow-x:auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Customer</th>
+              <th>Phone</th>
+              <th>Address</th>
+              <th>Total</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+
+          <tbody id="ordersTable">
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script type="module">
+
+import { createClient }
+from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+const SUPABASE_URL =
+"https://tthkmezmyvnjufnrbezp.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_Pi3JraUChkZ_f5xGukdrlQ_f4Vzvhqw";
+
+const supabase =
+createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const loginBox =
+document.getElementById("loginBox");
+
+const adminPanel =
+document.getElementById("adminPanel");
+
+const loginMsg =
+document.getElementById("loginMsg");
+
+async function checkLogin(){
+
+  const { data } =
+  await supabase.auth.getSession();
+
+  if(data.session){
+
+    loginBox.classList.add("hidden");
+    adminPanel.classList.remove("hidden");
+
+    loadProducts();
+    loadOrders();
+
+  }else{
+
+    loginBox.classList.remove("hidden");
+    adminPanel.classList.add("hidden");
+
+  }
+}
+
+document.getElementById("loginBtn")
+.addEventListener("click", async () => {
+
+  const email =
+  document.getElementById("email").value.trim();
+
+  const password =
+  document.getElementById("password").value;
+
+  if(!email || !password){
+
+    loginMsg.textContent =
+    "Email aur password enter karein.";
+
+    return;
+  }
+
+  loginMsg.textContent = "Logging in...";
+
+  const { error } =
+  await supabase.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if(error){
+
+    loginMsg.textContent =
+    "Login failed: " + error.message;
+
+    return;
+  }
+
+  checkLogin();
+
+});
+
+document.getElementById("logoutBtn")
+.addEventListener("click", async () => {
+
+  await supabase.auth.signOut();
+
+  checkLogin();
+
+});
+
+const costInput =
+document.getElementById("costPrice");
+
+const sellingInput =
+document.getElementById("sellingPrice");
+
+function calculateProfit(){
+
+  const cost =
+  Number(costInput.value) || 0;
+
+  const selling =
+  Number(sellingInput.value) || 0;
+
+  const profit =
+  selling - cost;
+
+  document.getElementById("profitPreview")
+  .textContent =
+  "Profit: Rs. " + profit.toLocaleString();
+
+}
+
+costInput.addEventListener(
+"input",
+calculateProfit
+);
+
+sellingInput.addEventListener(
+"input",
+calculateProfit
+);
+
+document.getElementById("addProductBtn")
+.addEventListener("click", async () => {
+
+  const name =
+  document.getElementById("productName")
+  .value.trim();
+
+  const description =
+  document.getElementById("productDescription")
+  .value.trim();
+
+  const cost =
+  Number(costInput.value);
+
+  const price =
+  Number(sellingInput.value);
+
+  const image_url =
+  document.getElementById("imageUrl")
+  .value.trim();
+
+  const msg =
+  document.getElementById("productMsg");
+
+  if(!name || !cost || !price){
+
+    msg.textContent =
+    "Product name, cost price aur selling price zaroori hain.";
+
+    return;
+  }
+
+  const { error } =
+  await supabase
+  .from("products")
+  .insert([{
+    name:name,
+    description:description,
+    cost_price:cost,
+    price:price,
+    image_url:image_url
+  }]);
+
+  if(error){
+
+    msg.textContent =
+    "Product add nahi hua: " +
+    error.message;
+
+    return;
+  }
+
+  msg.textContent =
+  "Product successfully add ho gaya.";
+
+  document.getElementById("productName").value="";
+  document.getElementById("productDescription").value="";
+  costInput.value="";
+  sellingInput.value="";
+  document.getElementById("imageUrl").value="";
+
+  calculateProfit();
+  loadProducts();
+
+});
+
+async function loadProducts(){
+
+  const { data, error } =
+  await supabase
+  .from("products")
+  .select("*")
+  .order("id",{ascending:false});
+
+  const table =
+  document.getElementById("productsTable");
+
+  if(error){
+
+    table.innerHTML =
+    `<tr><td colspan="6">
+    ${error.message}
+    </td></tr>`;
+
+    return;
+  }
+
+  table.innerHTML =
+  (data || []).map(p => {
+
+    const profit =
+    Number(p.price) -
+    Number(p.cost_price || 0);
+
+    return `
+      <tr>
+
+        <td>
+          ${
+            p.image_url
+            ? `<img src="${p.image_url}">`
+            : "📦"
+          }
+        </td>
+
+        <td>${p.name}</td>
+
+        <td>
+          Rs. ${Number(p.cost_price || 0).toLocaleString()}
+        </td>
+
+        <td>
+          Rs. ${Number(p.price).toLocaleString()}
+        </td>
+
+        <td class="profit">
+          Rs. ${profit.toLocaleString()}
+        </td>
+
+        <td>
+          <button
+            class="danger"
+            onclick="deleteProduct(${p.id})">
+            Delete
+          </button>
+        </td>
+
+      </tr>
+    `;
+
+  }).join("");
+
+}
+
+window.deleteProduct =
+async function(id){
+
+  if(!confirm(
+  "Kya aap ye product delete karna chahte hain?"
+  )) return;
+
+  const { error } =
+  await supabase
+  .from("products")
+  .delete()
+  .eq("id",id);
+
+  if(error){
+
+    alert(
+    "Delete failed: " +
+    error.message
+    );
+
+    return;
+  }
+
+  loadProducts();
+
+};
+
+async function loadOrders(){
+
+  const { data, error } =
+  await supabase
+  .from("orders")
+  .select("*")
+  .order("id",{ascending:false});
+
+  const table =
+  document.getElementById("ordersTable");
+
+  if(error){
+
+    table.innerHTML =
+    `<tr><td colspan="5">
+    ${error.message}
+    </td></tr>`;
+
+    return;
+  }
+
+  table.innerHTML =
+  (data || []).map(order => {
+
+    return `
+      <tr>
+
+        <td>${order.customer_name || ""}</td>
+
+        <td>${order.phone || ""}</td>
+
+        <td>${order.address || ""}</td>
+
+        <td>
+          Rs. ${Number(order.total || 0).toLocaleString()}
+        </td>
+
+        <td>
+          ${order.status || "New"}
+        </td>
+
+      </tr>
+    `;
+
+  }).join("");
+
+}
+
+checkLogin();
+
+</script>
+
+</body>
+</html>
