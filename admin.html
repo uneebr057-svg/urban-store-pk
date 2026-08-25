@@ -89,13 +89,21 @@ th,td{
   padding:12px;
   border-bottom:1px solid #e5e7eb;
   text-align:left;
+  vertical-align:middle;
 }
 
 .product-image{
-  width:70px;
-  height:60px;
+  width:75px;
+  height:65px;
   object-fit:cover;
-  border-radius:7px;
+  border-radius:8px;
+  cursor:pointer;
+  border:1px solid #ddd;
+  transition:.2s;
+}
+
+.product-image:hover{
+  transform:scale(1.05);
 }
 
 .login{
@@ -103,7 +111,9 @@ th,td{
   margin:80px auto;
 }
 
-.hidden{display:none}
+.hidden{
+  display:none;
+}
 
 .msg{
   margin-top:10px;
@@ -155,6 +165,105 @@ th,td{
   object-fit:cover;
 }
 
+/* GALLERY */
+
+.gallery-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.88);
+  z-index:9999;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+.gallery-overlay.show{
+  display:flex;
+}
+
+.gallery-box{
+  width:min(900px,100%);
+  text-align:center;
+  position:relative;
+}
+
+.gallery-main{
+  max-width:100%;
+  max-height:65vh;
+  object-fit:contain;
+  border-radius:10px;
+}
+
+.gallery-title{
+  color:#fff;
+  font-size:21px;
+  font-weight:700;
+  margin-bottom:15px;
+}
+
+.gallery-close{
+  position:fixed;
+  top:18px;
+  right:20px;
+  width:45px;
+  height:45px;
+  border-radius:50%;
+  background:#ef4444;
+  color:#fff;
+  font-size:25px;
+  padding:0;
+  z-index:10001;
+}
+
+.gallery-arrow{
+  position:fixed;
+  top:50%;
+  transform:translateY(-50%);
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  background:#fff;
+  color:#111;
+  font-size:30px;
+  padding:0;
+  z-index:10001;
+}
+
+.gallery-prev{
+  left:20px;
+}
+
+.gallery-next{
+  right:20px;
+}
+
+.gallery-thumbnails{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:15px;
+}
+
+.gallery-thumb{
+  width:65px;
+  height:55px;
+  object-fit:cover;
+  border-radius:6px;
+  cursor:pointer;
+  border:2px solid transparent;
+}
+
+.gallery-thumb.active{
+  border-color:#10b981;
+}
+
+.picture-count{
+  font-size:12px;
+  color:#64748b;
+}
+
 @media(max-width:600px){
 
   header{
@@ -167,6 +276,23 @@ th,td{
 
   .container{
     padding:20px 10px;
+  }
+
+  .gallery-main{
+    max-height:55vh;
+  }
+
+  .gallery-prev{
+    left:8px;
+  }
+
+  .gallery-next{
+    right:8px;
+  }
+
+  .gallery-arrow{
+    width:42px;
+    height:42px;
   }
 
 }
@@ -182,192 +308,235 @@ th,td{
 
 <div class="container">
 
-  <div id="loginBox" class="card login">
-
-    <h2>Admin Login</h2>
-
-    <input
-      id="email"
-      type="email"
-      placeholder="Admin Email">
-
-    <input
-      id="password"
-      type="password"
-      placeholder="Password">
-
-    <button
-      class="primary"
-      id="loginBtn">
-      Login
-    </button>
-
-    <div id="loginMsg" class="msg"></div>
-
-  </div>
-
-
-  <div id="adminPanel" class="hidden">
-
-    <div class="card">
-
-      <h2>Add New Product</h2>
-
-      <label>Product Name</label>
-
-      <input
-        id="productName"
-        placeholder="e.g. Premium Leather Wallet">
-
-
-      <label>Description</label>
-
-      <textarea
-        id="productDescription"
-        placeholder="Product description"></textarea>
-
-
-      <label>Cost Price</label>
-
-      <input
-        id="costPrice"
-        type="number"
-        placeholder="e.g. 795">
-
-
-      <label>Selling Price</label>
-
-      <input
-        id="sellingPrice"
-        type="number"
-        placeholder="e.g. 999">
-
-
-      <label>Product Pictures (Maximum 5)</label>
-
-      <br><br>
-
-      <label
-        for="imageFiles"
-        class="upload-label">
-
-        📷 Choose Product Pictures
-
-      </label>
-
-      <input
-        id="imageFiles"
-        type="file"
-        accept="image/*"
-        multiple>
-
-      <div
-        id="uploadStatus"
-        class="upload-status">
-
-        No pictures selected
-
-      </div>
-
-      <div
-        id="imagePreview"
-        class="preview-grid">
-      </div>
-
-
-      <div
-        id="profitPreview"
-        class="profit">
-
-        Profit: Rs. 0
-
-      </div>
-
-      <br>
-
-      <button
-        class="primary"
-        id="addProductBtn">
-
-        Add Product
-
-      </button>
-
-      <div
-        id="productMsg"
-        class="msg">
-      </div>
-
-    </div>
-
-
-    <div class="card">
-
-      <h2>Products</h2>
-
-      <div style="overflow-x:auto">
-
-        <table>
-
-          <thead>
-
-            <tr>
-
-              <th>Image</th>
-              <th>Product</th>
-              <th>Cost</th>
-              <th>Selling</th>
-              <th>Profit</th>
-              <th>Action</th>
-
-            </tr>
-
-          </thead>
-
-          <tbody id="productsTable"></tbody>
-
-        </table>
-
-      </div>
-
-    </div>
-
-
-    <div class="card">
-
-      <h2>Orders</h2>
-
-      <div style="overflow-x:auto">
-
-        <table>
-
-          <thead>
-
-            <tr>
-
-              <th>Customer</th>
-              <th>Phone</th>
-              <th>Address</th>
-              <th>Total</th>
-              <th>Status</th>
-
-            </tr>
-
-          </thead>
-
-          <tbody id="ordersTable"></tbody>
-
-        </table>
-
-      </div>
-
-    </div>
-
-  </div>
+<div id="loginBox" class="card login">
+
+<h2>Admin Login</h2>
+
+<input
+id="email"
+type="email"
+placeholder="Admin Email">
+
+<input
+id="password"
+type="password"
+placeholder="Password">
+
+<button
+class="primary"
+id="loginBtn">
+Login
+</button>
+
+<div id="loginMsg" class="msg"></div>
 
 </div>
 
 
+<div id="adminPanel" class="hidden">
+
+<div class="card">
+
+<h2>Add New Product</h2>
+
+<label>Product Name</label>
+
+<input
+id="productName"
+placeholder="e.g. Premium Leather Wallet">
+
+
+<label>Description</label>
+
+<textarea
+id="productDescription"
+placeholder="Product description"></textarea>
+
+
+<label>Cost Price</label>
+
+<input
+id="costPrice"
+type="number"
+placeholder="e.g. 795">
+
+
+<label>Selling Price</label>
+
+<input
+id="sellingPrice"
+type="number"
+placeholder="e.g. 999">
+
+
+<label>Product Pictures (Maximum 5)</label>
+
+<br><br>
+
+<label
+for="imageFiles"
+class="upload-label">
+
+📷 Choose Product Pictures
+
+</label>
+
+<input
+id="imageFiles"
+type="file"
+accept="image/*"
+multiple>
+
+<div
+id="uploadStatus"
+class="upload-status">
+
+No pictures selected
+
+</div>
+
+<div
+id="imagePreview"
+class="preview-grid">
+</div>
+
+<div
+id="profitPreview"
+class="profit">
+
+Profit: Rs. 0
+
+</div>
+
+<br>
+
+<button
+class="primary"
+id="addProductBtn">
+
+Add Product
+
+</button>
+
+<div
+id="productMsg"
+class="msg">
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>Products</h2>
+
+<div style="overflow-x:auto">
+
+<table>
+
+<thead>
+
+<tr>
+<th>Image</th>
+<th>Product</th>
+<th>Cost</th>
+<th>Selling</th>
+<th>Profit</th>
+<th>Action</th>
+</tr>
+
+</thead>
+
+<tbody id="productsTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>Orders</h2>
+
+<div style="overflow-x:auto">
+
+<table>
+
+<thead>
+
+<tr>
+<th>Customer</th>
+<th>Phone</th>
+<th>Address</th>
+<th>Total</th>
+<th>Status</th>
+</tr>
+
+</thead>
+
+<tbody id="ordersTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- PRODUCT GALLERY -->
+
+<div
+id="galleryOverlay"
+class="gallery-overlay">
+
+<button
+id="galleryClose"
+class="gallery-close">
+
+×
+</button>
+
+<button
+id="galleryPrev"
+class="gallery-arrow gallery-prev">
+
+‹
+</button>
+
+<div class="gallery-box">
+
+<div
+id="galleryTitle"
+class="gallery-title">
+</div>
+
+<img
+id="galleryMain"
+class="gallery-main"
+src=""
+alt="Product">
+
+<div
+id="galleryThumbnails"
+class="gallery-thumbnails">
+</div>
+
+</div>
+
+<button
+id="galleryNext"
+class="gallery-arrow gallery-next">
+
+›
+</button>
+
+</div>
 <script type="module">
 
 import { createClient }
@@ -384,18 +553,16 @@ const SUPABASE_KEY =
 
 const supabase =
 createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
+SUPABASE_URL,
+SUPABASE_KEY
 );
 
 
 const loginBox =
 document.getElementById("loginBox");
 
-
 const adminPanel =
 document.getElementById("adminPanel");
-
 
 const loginMsg =
 document.getElementById("loginMsg");
@@ -403,92 +570,91 @@ document.getElementById("loginMsg");
 
 async function checkLogin(){
 
-  const { data } =
-  await supabase.auth.getSession();
+const {data} =
+await supabase.auth.getSession();
 
+if(data.session){
 
-  if(data.session){
+loginBox.classList.add("hidden");
 
-    loginBox.classList.add("hidden");
+adminPanel.classList.remove("hidden");
 
-    adminPanel.classList.remove("hidden");
+loadProducts();
+loadOrders();
 
-    loadProducts();
+}else{
 
-    loadOrders();
+loginBox.classList.remove("hidden");
 
-  }else{
+adminPanel.classList.add("hidden");
 
-    loginBox.classList.remove("hidden");
-
-    adminPanel.classList.add("hidden");
-
-  }
+}
 
 }
 
 
 document
 .getElementById("loginBtn")
-.addEventListener("click", async () => {
+.addEventListener("click",async()=>{
 
-  const email =
-  document.getElementById("email")
-  .value
-  .trim();
+const email =
+document
+.getElementById("email")
+.value
+.trim();
 
-
-  const password =
-  document.getElementById("password")
-  .value;
-
-
-  if(!email || !password){
-
-    loginMsg.textContent =
-    "Email aur password enter karein.";
-
-    return;
-
-  }
+const password =
+document
+.getElementById("password")
+.value;
 
 
-  loginMsg.textContent =
-  "Logging in...";
+if(!email || !password){
+
+loginMsg.textContent =
+"Email aur password enter karein.";
+
+return;
+
+}
 
 
-  const { error } =
-  await supabase.auth.signInWithPassword({
-
-    email,
-    password
-
-  });
+loginMsg.textContent =
+"Logging in...";
 
 
-  if(error){
+const {error} =
+await supabase.auth.signInWithPassword({
 
-    loginMsg.textContent =
-    "Login failed: " +
-    error.message;
+email,
+password
 
-    return;
-
-  }
+});
 
 
-  checkLogin();
+if(error){
+
+loginMsg.textContent =
+"Login failed: " +
+error.message;
+
+return;
+
+}
+
+
+checkLogin();
 
 });
 
 
 document
 .getElementById("logoutBtn")
-.addEventListener("click", async () => {
+.addEventListener("click",async()=>{
 
-  await supabase.auth.signOut();
+await supabase.auth.signOut();
 
-  checkLogin();
+checkLogin();
 
 });
 
@@ -496,53 +662,47 @@ document
 const costInput =
 document.getElementById("costPrice");
 
-
 const sellingInput =
 document.getElementById("sellingPrice");
 
 
 function calculateProfit(){
 
-  const cost =
-  Number(costInput.value) || 0;
+const cost =
+Number(costInput.value) || 0;
+
+const selling =
+Number(sellingInput.value) || 0;
+
+const profit =
+selling-cost;
 
 
-  const selling =
-  Number(sellingInput.value) || 0;
-
-
-  const profit =
-  selling - cost;
-
-
-  document
-  .getElementById("profitPreview")
-  .textContent =
-  "Profit: Rs. " +
-  profit.toLocaleString();
+document
+.getElementById("profitPreview")
+.textContent =
+"Profit: Rs. " +
+profit.toLocaleString();
 
 }
 
 
 costInput.addEventListener(
-  "input",
-  calculateProfit
+"input",
+calculateProfit
 );
 
-
 sellingInput.addEventListener(
-  "input",
-  calculateProfit
+"input",
+calculateProfit
 );
 
 
 const imageFiles =
 document.getElementById("imageFiles");
 
-
 const imagePreview =
 document.getElementById("imagePreview");
-
 
 const uploadStatus =
 document.getElementById("uploadStatus");
@@ -550,538 +710,845 @@ document.getElementById("uploadStatus");
 
 imageFiles.addEventListener(
 "change",
-() => {
+()=>{
 
-  const files =
-  Array.from(imageFiles.files);
-
-
-  imagePreview.innerHTML = "";
+const files =
+Array.from(imageFiles.files);
 
 
-  if(files.length === 0){
-
-    uploadStatus.textContent =
-    "No pictures selected";
-
-    return;
-
-  }
+imagePreview.innerHTML="";
 
 
-  if(files.length > 5){
+if(files.length===0){
 
-    alert(
-      "Maximum 5 pictures select karein."
-    );
+uploadStatus.textContent =
+"No pictures selected";
 
-    imageFiles.value = "";
+return;
 
-    uploadStatus.textContent =
-    "Maximum 5 pictures allowed";
-
-    return;
-
-  }
+}
 
 
-  uploadStatus.textContent =
-  files.length +
-  " picture(s) selected";
+if(files.length>5){
+
+alert(
+"Maximum 5 pictures select karein."
+);
+
+imageFiles.value="";
+
+uploadStatus.textContent =
+"Maximum 5 pictures allowed";
+
+return;
+
+}
 
 
-  files.forEach(file => {
-
-    const url =
-    URL.createObjectURL(file);
-
-
-    const div =
-    document.createElement("div");
+uploadStatus.textContent =
+files.length +
+" picture(s) selected";
 
 
-    div.className =
-    "preview-item";
+files.forEach(file=>{
+
+const url =
+URL.createObjectURL(file);
 
 
-    const img =
-    document.createElement("img");
+const div =
+document.createElement("div");
+
+div.className =
+"preview-item";
 
 
-    img.src = url;
+const img =
+document.createElement("img");
 
+img.src=url;
 
-    div.appendChild(img);
+div.appendChild(img);
 
+imagePreview.appendChild(div);
 
-    imagePreview.appendChild(div);
-
-  });
+});
 
 });
 
 
 document
 .getElementById("addProductBtn")
-.addEventListener("click", async () => {
+.addEventListener("click",async()=>{
 
-  const name =
-  document
-  .getElementById("productName")
-  .value
-  .trim();
+const name =
+document
+.getElementById("productName")
+.value
+.trim();
 
 
-  const description =
-  document
-  .getElementById("productDescription")
-  .value
-  .trim();
+const description =
+document
+.getElementById("productDescription")
+.value
+.trim();
 
 
-  const cost =
-  Number(costInput.value);
+const cost =
+Number(costInput.value);
 
 
-  const price =
-  Number(sellingInput.value);
+const price =
+Number(sellingInput.value);
 
 
-  const files =
-  Array.from(imageFiles.files);
+const files =
+Array.from(imageFiles.files);
 
 
-  const msg =
-  document
-  .getElementById("productMsg");
+const msg =
+document
+.getElementById("productMsg");
 
 
-  if(!name || !cost || !price){
+if(!name || !cost || !price){
 
-    msg.textContent =
-    "Product name, cost price aur selling price zaroori hain.";
+msg.textContent =
+"Product name, cost price aur selling price zaroori hain.";
 
-    return;
-
-  }
-
-
-  if(files.length > 5){
-
-    msg.textContent =
-    "Maximum 5 pictures allowed hain.";
-
-    return;
-
-  }
-
-
-  msg.textContent =
-  "Product add ho raha hai...";
-
-
-  const image_urls = [];
-
-
-  if(files.length > 0){
-
-    uploadStatus.textContent =
-    "Pictures uploading...";
-
-
-    for(
-      let i = 0;
-      i < files.length;
-      i++
-    ){
-
-      const file =
-      files[i];
-
-
-      const fileExt =
-      file.name
-      .split(".")
-      .pop();
-
-
-      const fileName =
-      Date.now() +
-      "-" +
-      i +
-      "-" +
-      Math.random()
-      .toString(36)
-      .substring(2) +
-      "." +
-      fileExt;
-
-
-      const filePath =
-      fileName;
-
-
-      const { error:
-      uploadError } =
-
-      await supabase.storage
-      .from("product-images")
-      .upload(
-        filePath,
-        file
-      );
-
-
-      if(uploadError){
-
-        msg.textContent =
-        "Picture upload failed: " +
-        uploadError.message;
-
-        return;
-
-      }
-
-
-      const { data:
-      publicData } =
-
-      supabase.storage
-      .from("product-images")
-      .getPublicUrl(
-        filePath
-      );
-
-
-      image_urls.push(
-        publicData.publicUrl
-      );
-
-    }
-
-
-    uploadStatus.textContent =
-    image_urls.length +
-    " pictures uploaded successfully.";
-
-  }
-
-
-  const { error } =
-  await supabase
-  .from("products")
-  .insert([{
-
-    name:name,
-
-    description:description,
-
-    cost_price:cost,
-
-    price:price,
-
-    image_url:
-    image_urls[0] || "",
-
-    image_urls:image_urls
-
-  }]);
-
-
-  if(error){
-
-    msg.textContent =
-    "Product add nahi hua: " +
-    error.message;
-
-    return;
-
-  }
-
-
-  msg.textContent =
-  "Product successfully add ho gaya with " +
-  image_urls.length +
-  " picture(s).";
-
-
-  document
-  .getElementById("productName")
-  .value = "";
-
-
-  document
-  .getElementById("productDescription")
-  .value = "";
-
-
-  costInput.value = "";
-
-
-  sellingInput.value = "";
-
-
-  imageFiles.value = "";
-
-
-  imagePreview.innerHTML = "";
-
-
-  uploadStatus.textContent =
-  "No pictures selected";
-
-
-  calculateProfit();
-
-
-  loadProducts();
-
-});
-
-
-async function loadProducts(){
-
-  const { data, error } =
-  await supabase
-  .from("products")
-  .select("*")
-  .order(
-    "id",
-    {ascending:false}
-  );
-
-
-  const table =
-  document
-  .getElementById("productsTable");
-
-
-  if(error){
-
-    table.innerHTML =
-    `<tr>
-      <td colspan="6">
-        ${error.message}
-      </td>
-    </tr>`;
-
-    return;
-
-  }
-
-
-  table.innerHTML =
-  (data || [])
-  .map(p => {
-
-    const profit =
-    Number(p.price) -
-    Number(p.cost_price || 0);
-
-
-    const firstImage =
-    p.image_urls &&
-    p.image_urls.length > 0
-
-    ? p.image_urls[0]
-
-    : p.image_url;
-
-
-    const pictureCount =
-    p.image_urls &&
-    p.image_urls.length > 0
-
-    ? p.image_urls.length
-
-    : p.image_url
-
-    ? 1
-
-    : 0;
-
-
-    return `
-
-      <tr>
-
-        <td>
-
-          ${
-            firstImage
-
-            ?
-
-            `<img
-              class="product-image"
-              src="${firstImage}"
-              alt="${p.name}">`
-
-            :
-
-            "📦"
-          }
-
-          <br>
-
-          <small>
-            ${pictureCount} picture(s)
-          </small>
-
-        </td>
-
-
-        <td>
-          ${p.name}
-        </td>
-
-
-        <td>
-          Rs.
-          ${Number(
-            p.cost_price || 0
-          ).toLocaleString()}
-        </td>
-
-
-        <td>
-          Rs.
-          ${Number(
-            p.price
-          ).toLocaleString()}
-        </td>
-
-
-        <td class="profit">
-          Rs.
-          ${profit.toLocaleString()}
-        </td>
-
-
-        <td>
-
-          <button
-            class="danger"
-            onclick="
-              deleteProduct(${p.id})
-            ">
-
-            Delete
-
-          </button>
-
-        </td>
-
-      </tr>
-
-    `;
-
-  })
-  .join("");
+return;
 
 }
 
 
-window.deleteProduct =
-async function(id){
+if(files.length>5){
 
-  if(!confirm(
-    "Kya aap ye product delete karna chahte hain?"
-  )) return;
+msg.textContent =
+"Maximum 5 pictures allowed hain.";
 
+return;
 
-  const { error } =
-  await supabase
-  .from("products")
-  .delete()
-  .eq("id",id);
+}
 
 
-  if(error){
-
-    alert(
-      "Delete failed: " +
-      error.message
-    );
-
-    return;
-
-  }
+msg.textContent =
+"Product add ho raha hai...";
 
 
-  loadProducts();
+const image_urls=[];
 
-};
+
+if(files.length>0){
+
+uploadStatus.textContent =
+"Pictures uploading...";
+
+
+for(
+let i=0;
+i<files.length;
+i++
+){
+
+const file =
+files[i];
+
+
+const fileExt =
+file.name
+.split(".")
+.pop();
+
+
+const fileName =
+Date.now()+
+"-"+
+i+
+"-"+
+Math.random()
+.toString(36)
+.substring(2)+
+"."+
+fileExt;
+
+
+const {error:uploadError} =
+await supabase.storage
+.from("product-images")
+.upload(
+fileName,
+file
+);
+
+
+if(uploadError){
+
+msg.textContent =
+"Picture upload failed: "+
+uploadError.message;
+
+return;
+
+}
+
+
+const {data:publicData} =
+supabase.storage
+.from("product-images")
+.getPublicUrl(
+fileName
+);
+
+
+image_urls.push(
+publicData.publicUrl
+);
+
+}
+
+}
+
+
+const {error} =
+await supabase
+.from("products")
+.insert([{
+
+name:name,
+
+description:description,
+
+cost_price:cost,
+
+price:price,
+
+image_url:
+image_urls[0] || "",
+
+image_urls:image_urls
+
+}]);
+
+
+if(error){
+
+msg.textContent =
+"Product add nahi hua: "+
+error.message;
+
+return;
+
+}
+
+
+msg.textContent =
+"Product successfully add ho gaya with "+
+image_urls.length+
+" picture(s).";
+
+
+document
+.getElementById("productName")
+.value="";
+
+
+document
+.getElementById("productDescription")
+.value="";
+
+
+costInput.value="";
+
+sellingInput.value="";
+
+imageFiles.value="";
+
+imagePreview.innerHTML="";
+
+uploadStatus.textContent =
+"No pictures selected";
+
+
+calculateProfit();
+
+loadProducts();
+
+});
+
+
+/* GALLERY VARIABLES */
+
+let galleryImages=[];
+
+let galleryIndex=0;
+
+
+const galleryOverlay =
+document.getElementById(
+"galleryOverlay"
+);
+
+const galleryMain =
+document.getElementById(
+"galleryMain"
+);
+
+const galleryTitle =
+document.getElementById(
+"galleryTitle"
+);
+
+const galleryThumbnails =
+document.getElementById(
+"galleryThumbnails"
+);
+
+
+function getProductImages(product){
+
+let images=[];
+
+
+if(
+Array.isArray(product.image_urls)
+){
+
+images =
+product.image_urls
+.filter(Boolean);
+
+}
+
+
+if(
+images.length===0 &&
+product.image_url
+){
+
+images=[
+product.image_url
+];
+
+}
+
+
+return [
+...new Set(images)
+];
+
+}
+
+
+function openGallery(
+images,
+title
+){
+
+if(!images.length){
+return;
+}
+
+
+galleryImages=images;
+
+galleryIndex=0;
+
+galleryTitle.textContent =
+title || "Product";
+
+galleryOverlay.classList.add(
+"show"
+);
+
+renderGallery();
+
+}
+
+
+function renderGallery(){
+
+if(!galleryImages.length){
+return;
+}
+
+
+galleryMain.src =
+galleryImages[galleryIndex];
+
+
+galleryThumbnails.innerHTML="";
+
+
+galleryImages.forEach(
+(url,index)=>{
+
+const img =
+document.createElement("img");
+
+img.src=url;
+
+img.className =
+"gallery-thumb";
+
+
+if(index===galleryIndex){
+
+img.classList.add("active");
+
+}
+
+
+img.addEventListener(
+"click",
+()=>{
+
+galleryIndex=index;
+
+renderGallery();
+
+});
+
+
+galleryThumbnails.appendChild(
+img
+);
+
+});
+
+}
+
+
+function nextImage(){
+
+if(!galleryImages.length){
+return;
+}
+
+
+galleryIndex=
+(
+galleryIndex+1
+)%galleryImages.length;
+
+
+renderGallery();
+
+}
+
+
+function previousImage(){
+
+if(!galleryImages.length){
+return;
+}
+
+
+galleryIndex=
+(
+galleryIndex-1+
+galleryImages.length
+)%galleryImages.length;
+
+
+renderGallery();
+
+}
+
+
+document
+.getElementById("galleryNext")
+.addEventListener(
+"click",
+nextImage
+);
+
+
+document
+.getElementById("galleryPrev")
+.addEventListener(
+"click",
+previousImage
+);
+
+
+document
+.getElementById("galleryClose")
+.addEventListener(
+"click",
+()=>{
+
+galleryOverlay.classList.remove(
+"show"
+);
+
+});
+
+
+galleryOverlay.addEventListener(
+"click",
+event=>{
+
+if(
+event.target===
+galleryOverlay
+){
+
+galleryOverlay.classList.remove(
+"show"
+);
+
+}
+
+});
+
+
+document.addEventListener(
+"keydown",
+event=>{
+
+if(
+!galleryOverlay.classList.contains(
+"show"
+)
+){
+
+return;
+
+}
+
+
+if(event.key==="Escape"){
+
+galleryOverlay.classList.remove(
+"show"
+);
+
+}
+
+
+if(event.key==="ArrowRight"){
+
+nextImage();
+
+}
+
+
+if(event.key==="ArrowLeft"){
+
+previousImage();
+
+}
+
+});
+  async function loadProducts(){
+
+const {data,error} =
+await supabase
+.from("products")
+.select("*")
+.order(
+"id",
+{ascending:false}
+);
+
+
+const table =
+document
+.getElementById("productsTable");
+
+
+if(error){
+
+table.innerHTML=
+`
+<tr>
+<td colspan="6">
+${error.message}
+</td>
+</tr>
+`;
+
+return;
+
+}
+
+
+table.innerHTML =
+(data || [])
+.map(product=>{
+
+const images =
+getProductImages(product);
+
+
+const firstImage =
+images[0];
+
+
+const pictureCount =
+images.length;
+
+
+const profit =
+Number(product.price)-
+Number(
+product.cost_price || 0
+);
+
+
+return `
+
+<tr>
+
+<td>
+
+${
+firstImage
+
+?
+
+`
+<img
+class="product-image"
+src="${firstImage}"
+alt="${product.name}"
+data-product-id="${product.id}"
+title="Click to view all pictures">
+`
+
+:
+
+"📦"
+
+}
+
+<br>
+
+<small class="picture-count">
+
+${
+pictureCount
+}
+
+picture(s)
+
+</small>
+
+</td>
+
+
+<td>
+
+${product.name || ""}
+
+</td>
+
+
+<td>
+
+Rs.
+${Number(
+product.cost_price || 0
+).toLocaleString()}
+
+</td>
+
+
+<td>
+
+Rs.
+${Number(
+product.price || 0
+).toLocaleString()}
+
+</td>
+
+
+<td class="profit">
+
+Rs.
+${profit.toLocaleString()}
+
+</td>
+
+
+<td>
+
+<button
+class="danger delete-product"
+data-id="${product.id}">
+
+Delete
+
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+})
+.join("");
+
+
+/* CLICK IMAGE TO OPEN GALLERY */
+
+(data || []).forEach(product=>{
+
+const image =
+document.querySelector(
+`[data-product-id="${product.id}"]`
+);
+
+
+if(image){
+
+image.addEventListener(
+"click",
+()=>{
+
+openGallery(
+getProductImages(product),
+product.name
+);
+
+});
+
+}
+
+
+const deleteButton =
+document.querySelector(
+`.delete-product[data-id="${product.id}"]`
+);
+
+
+if(deleteButton){
+
+deleteButton.addEventListener(
+"click",
+()=>{
+
+deleteProduct(product.id);
+
+});
+
+}
+
+});
+
+}
+
+
+async function deleteProduct(id){
+
+if(
+!confirm(
+"Kya aap ye product delete karna chahte hain?"
+)
+){
+
+return;
+
+}
+
+
+const {error} =
+await supabase
+.from("products")
+.delete()
+.eq("id",id);
+
+
+if(error){
+
+alert(
+"Delete failed: "+
+error.message
+);
+
+return;
+
+}
+
+
+loadProducts();
+
+}
 
 
 async function loadOrders(){
 
-  const { data, error } =
-  await supabase
-  .from("orders")
-  .select("*")
-  .order(
-    "id",
-    {ascending:false}
-  );
+const {data,error} =
+await supabase
+.from("orders")
+.select("*")
+.order(
+"id",
+{ascending:false}
+);
 
 
-  const table =
-  document
-  .getElementById("ordersTable");
+const table =
+document
+.getElementById("ordersTable");
 
 
-  if(error){
+if(error){
 
-    table.innerHTML =
-    `<tr>
-      <td colspan="5">
-        ${error.message}
-      </td>
-    </tr>`;
+table.innerHTML=
+`
+<tr>
+<td colspan="5">
+${error.message}
+</td>
+</tr>
+`;
 
-    return;
+return;
 
-  }
+}
 
 
-  table.innerHTML =
-  (data || [])
-  .map(order => {
+table.innerHTML =
+(data || [])
+.map(order=>{
 
-    return `
+return `
 
-      <tr>
+<tr>
 
-        <td>
-          ${order.customer_name || ""}
-        </td>
+<td>
+${order.customer_name || ""}
+</td>
 
-        <td>
-          ${order.phone || ""}
-        </td>
+<td>
+${order.phone || ""}
+</td>
 
-        <td>
-          ${order.address || ""}
-        </td>
+<td>
+${order.address || ""}
+</td>
 
-        <td>
-          Rs.
-          ${Number(
-            order.total || 0
-          ).toLocaleString()}
-        </td>
+<td>
+Rs.
+${Number(
+order.total || 0
+).toLocaleString()}
+</td>
 
-        <td>
-          ${order.status || "New"}
-        </td>
+<td>
+${order.status || "New"}
+</td>
 
-      </tr>
+</tr>
 
-    `;
+`;
 
-  })
-  .join("");
+})
+.join("");
 
 }
 
