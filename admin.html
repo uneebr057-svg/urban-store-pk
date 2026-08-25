@@ -52,9 +52,7 @@ header{
   margin-bottom:25px;
 }
 
-h2{
-  margin-top:0;
-}
+h2{margin-top:0}
 
 input,textarea{
   width:100%;
@@ -100,23 +98,12 @@ th,td{
   border-radius:7px;
 }
 
-.preview-image{
-  width:120px;
-  height:100px;
-  object-fit:cover;
-  border-radius:10px;
-  margin-top:8px;
-  display:none;
-}
-
 .login{
   max-width:420px;
   margin:80px auto;
 }
 
-.hidden{
-  display:none;
-}
+.hidden{display:none}
 
 .msg{
   margin-top:10px;
@@ -138,13 +125,50 @@ th,td{
   font-weight:700;
 }
 
-#imageFile{
+#imageFiles{
   display:none;
 }
 
 .upload-status{
-  margin-top:8px;
+  margin-top:10px;
   color:#475569;
+}
+
+.preview-grid{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+
+.preview-item{
+  width:110px;
+  height:100px;
+  border:1px solid #ddd;
+  border-radius:8px;
+  overflow:hidden;
+}
+
+.preview-item img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+@media(max-width:600px){
+
+  header{
+    padding:15px;
+  }
+
+  .logo{
+    font-size:18px;
+  }
+
+  .container{
+    padding:20px 10px;
+  }
+
 }
 </style>
 </head>
@@ -208,7 +232,7 @@ th,td{
       <input
         id="costPrice"
         type="number"
-        placeholder="e.g. 630">
+        placeholder="e.g. 795">
 
 
       <label>Selling Price</label>
@@ -219,28 +243,36 @@ th,td{
         placeholder="e.g. 999">
 
 
-      <label>Product Image</label>
+      <label>Product Pictures (Maximum 5)</label>
 
       <br><br>
 
       <label
-        for="imageFile"
+        for="imageFiles"
         class="upload-label">
-        📷 Choose Product Image
+
+        📷 Choose Product Pictures
+
       </label>
 
       <input
-        id="imageFile"
+        id="imageFiles"
         type="file"
-        accept="image/*">
+        accept="image/*"
+        multiple>
 
-      <div id="uploadStatus" class="upload-status">
-        No image selected
+      <div
+        id="uploadStatus"
+        class="upload-status">
+
+        No pictures selected
+
       </div>
 
-      <img
+      <div
         id="imagePreview"
-        class="preview-image">
+        class="preview-grid">
+      </div>
 
 
       <div
@@ -292,8 +324,7 @@ th,td{
 
           </thead>
 
-          <tbody id="productsTable">
-          </tbody>
+          <tbody id="productsTable"></tbody>
 
         </table>
 
@@ -324,8 +355,7 @@ th,td{
 
           </thead>
 
-          <tbody id="ordersTable">
-          </tbody>
+          <tbody id="ordersTable"></tbody>
 
         </table>
 
@@ -495,19 +525,19 @@ function calculateProfit(){
 
 
 costInput.addEventListener(
-"input",
-calculateProfit
+  "input",
+  calculateProfit
 );
 
 
 sellingInput.addEventListener(
-"input",
-calculateProfit
+  "input",
+  calculateProfit
 );
 
 
-const imageFile =
-document.getElementById("imageFile");
+const imageFiles =
+document.getElementById("imageFiles");
 
 
 const imagePreview =
@@ -518,21 +548,37 @@ const uploadStatus =
 document.getElementById("uploadStatus");
 
 
-imageFile.addEventListener(
+imageFiles.addEventListener(
 "change",
 () => {
 
-  const file =
-  imageFile.files[0];
+  const files =
+  Array.from(imageFiles.files);
 
 
-  if(!file){
+  imagePreview.innerHTML = "";
+
+
+  if(files.length === 0){
 
     uploadStatus.textContent =
-    "No image selected";
+    "No pictures selected";
 
-    imagePreview.style.display =
-    "none";
+    return;
+
+  }
+
+
+  if(files.length > 5){
+
+    alert(
+      "Maximum 5 pictures select karein."
+    );
+
+    imageFiles.value = "";
+
+    uploadStatus.textContent =
+    "Maximum 5 pictures allowed";
 
     return;
 
@@ -540,20 +586,37 @@ imageFile.addEventListener(
 
 
   uploadStatus.textContent =
-  "Selected: " +
-  file.name;
+  files.length +
+  " picture(s) selected";
 
 
-  const previewUrl =
-  URL.createObjectURL(file);
+  files.forEach(file => {
+
+    const url =
+    URL.createObjectURL(file);
 
 
-  imagePreview.src =
-  previewUrl;
+    const div =
+    document.createElement("div");
 
 
-  imagePreview.style.display =
-  "block";
+    div.className =
+    "preview-item";
+
+
+    const img =
+    document.createElement("img");
+
+
+    img.src = url;
+
+
+    div.appendChild(img);
+
+
+    imagePreview.appendChild(div);
+
+  });
 
 });
 
@@ -584,8 +647,8 @@ document
   Number(sellingInput.value);
 
 
-  const file =
-  imageFile.files[0];
+  const files =
+  Array.from(imageFiles.files);
 
 
   const msg =
@@ -603,80 +666,103 @@ document
   }
 
 
+  if(files.length > 5){
+
+    msg.textContent =
+    "Maximum 5 pictures allowed hain.";
+
+    return;
+
+  }
+
+
   msg.textContent =
   "Product add ho raha hai...";
 
 
-  let image_url = "";
+  const image_urls = [];
 
 
-  if(file){
+  if(files.length > 0){
 
     uploadStatus.textContent =
-    "Uploading image...";
+    "Pictures uploading...";
 
 
-    const fileExt =
-    file.name
-    .split(".")
-    .pop();
+    for(
+      let i = 0;
+      i < files.length;
+      i++
+    ){
+
+      const file =
+      files[i];
 
 
-    const fileName =
-    Date.now() +
-    "-" +
-    Math.random()
-    .toString(36)
-    .substring(2) +
-    "." +
-    fileExt;
+      const fileExt =
+      file.name
+      .split(".")
+      .pop();
 
 
-    const filePath =
-    fileName;
+      const fileName =
+      Date.now() +
+      "-" +
+      i +
+      "-" +
+      Math.random()
+      .toString(36)
+      .substring(2) +
+      "." +
+      fileExt;
 
 
-    const { error:
-    uploadError } =
-
-    await supabase.storage
-    .from("product-images")
-    .upload(
-      filePath,
-      file
-    );
+      const filePath =
+      fileName;
 
 
-    if(uploadError){
+      const { error:
+      uploadError } =
 
-      msg.textContent =
-      "Image upload failed: " +
-      uploadError.message;
+      await supabase.storage
+      .from("product-images")
+      .upload(
+        filePath,
+        file
+      );
 
-      uploadStatus.textContent =
-      "Image upload failed";
 
-      return;
+      if(uploadError){
+
+        msg.textContent =
+        "Picture upload failed: " +
+        uploadError.message;
+
+        return;
+
+      }
+
+
+      const { data:
+      publicData } =
+
+      supabase.storage
+      .from("product-images")
+      .getPublicUrl(
+        filePath
+      );
+
+
+      image_urls.push(
+        publicData.publicUrl
+      );
 
     }
 
 
-    const { data:
-    publicData } =
-
-    supabase.storage
-    .from("product-images")
-    .getPublicUrl(
-      filePath
-    );
-
-
-    image_url =
-    publicData.publicUrl;
-
-
     uploadStatus.textContent =
-    "Image uploaded successfully.";
+    image_urls.length +
+    " pictures uploaded successfully.";
 
   }
 
@@ -694,7 +780,10 @@ document
 
     price:price,
 
-    image_url:image_url
+    image_url:
+    image_urls[0] || "",
+
+    image_urls:image_urls
 
   }]);
 
@@ -711,7 +800,9 @@ document
 
 
   msg.textContent =
-  "Product successfully add ho gaya.";
+  "Product successfully add ho gaya with " +
+  image_urls.length +
+  " picture(s).";
 
 
   document
@@ -730,15 +821,14 @@ document
   sellingInput.value = "";
 
 
-  imageFile.value = "";
+  imageFiles.value = "";
 
 
-  imagePreview.style.display =
-  "none";
+  imagePreview.innerHTML = "";
 
 
   uploadStatus.textContent =
-  "No image selected";
+  "No pictures selected";
 
 
   calculateProfit();
@@ -789,6 +879,28 @@ async function loadProducts(){
     Number(p.cost_price || 0);
 
 
+    const firstImage =
+    p.image_urls &&
+    p.image_urls.length > 0
+
+    ? p.image_urls[0]
+
+    : p.image_url;
+
+
+    const pictureCount =
+    p.image_urls &&
+    p.image_urls.length > 0
+
+    ? p.image_urls.length
+
+    : p.image_url
+
+    ? 1
+
+    : 0;
+
+
     return `
 
       <tr>
@@ -796,20 +908,25 @@ async function loadProducts(){
         <td>
 
           ${
-            p.image_url
+            firstImage
 
             ?
 
             `<img
               class="product-image"
-              src="${p.image_url}"
+              src="${firstImage}"
               alt="${p.name}">`
 
             :
 
             "📦"
-
           }
+
+          <br>
+
+          <small>
+            ${pictureCount} picture(s)
+          </small>
 
         </td>
 
