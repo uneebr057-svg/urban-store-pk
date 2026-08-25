@@ -616,6 +616,1434 @@ body{
   </div>
 
 </main>
+  <!-- PART 2 START -->
+
+<!-- PRODUCT DETAIL -->
+<div id="detailOverlay" class="overlay">
+  <div class="detail">
+
+    <button class="close" id="closeDetail">×</button>
+
+    <div class="detail-grid">
+
+      <div class="gallery">
+
+        <div class="main-image">
+
+          <button
+            class="gallery-arrow left"
+            id="prevImage">
+            ‹
+          </button>
+
+          <img
+            id="detailMainImage"
+            src=""
+            alt="Product">
+
+          <button
+            class="gallery-arrow right"
+            id="nextImage">
+            ›
+          </button>
+
+        </div>
+
+        <div
+          id="thumbnails"
+          class="thumbnails">
+        </div>
+
+      </div>
+
+      <div class="detail-info">
+
+        <div
+          id="detailName"
+          class="detail-name">
+        </div>
+
+        <div
+          id="detailPrice"
+          class="detail-price">
+        </div>
+
+        <div class="delivery-box">
+          🚚 <b>Cash on Delivery</b>
+          <br>
+          📦 Delivery Charges: Rs. 165
+        </div>
+
+        <div
+          id="detailDescription"
+          class="detail-description">
+        </div>
+
+        <div class="quantity-box">
+
+          <b>Quantity:</b>
+
+          <button id="detailMinus">−</button>
+
+          <span id="detailQty">1</span>
+
+          <button id="detailPlus">+</button>
+
+        </div>
+
+        <div class="buy-buttons">
+
+          <button
+            class="add-cart"
+            id="detailAddCart">
+
+            🛒 Add to Cart
+
+          </button>
+
+          <button
+            class="buy-now"
+            id="detailBuyNow">
+
+            ⚡ Buy Now
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+
+<!-- SHOPPING CART -->
+
+<aside
+  id="cart"
+  class="cart">
+
+  <div class="cart-header">
+
+    <b>Shopping Cart</b>
+
+    <button id="closeCart">
+      ×
+    </button>
+
+  </div>
+
+  <div
+    id="cartItems"
+    class="cart-items">
+  </div>
+
+  <div class="cart-summary">
+
+    <div>
+      Subtotal:
+      <b>
+        Rs.
+        <span id="cartSubtotal">0</span>
+      </b>
+    </div>
+
+    <div>
+      Delivery:
+      <b>
+        Rs.
+        <span id="cartDelivery">0</span>
+      </b>
+    </div>
+
+    <div class="cart-total">
+
+      Total:
+      Rs.
+      <span id="cartTotal">0</span>
+
+    </div>
+
+  </div>
+
+  <div class="checkout">
+
+    <h3>
+      📦 Cash on Delivery
+    </h3>
+
+    <input
+      id="customerName"
+      placeholder="Full Name *">
+
+    <input
+      id="phone"
+      placeholder="Mobile Number *">
+
+    <textarea
+      id="address"
+      rows="3"
+      placeholder="Complete Address *"></textarea>
+
+    <input
+      id="city"
+      placeholder="City *">
+
+    <textarea
+      id="notes"
+      rows="2"
+      placeholder="Order Notes"></textarea>
+
+    <button
+      id="placeOrder"
+      class="place-order">
+
+      Place COD Order
+
+    </button>
+
+    <div
+      id="orderMessage"
+      class="message">
+    </div>
+
+  </div>
+
+</aside>
+
+
+<footer class="footer">
+
+  <b>Urban Store PK</b>
+
+  <br><br>
+
+  Quality Products • Cash on Delivery Pakistan
+
+  <br><br>
+
+  © 2026 Urban Store PK
+
+</footer>
+
+
+<!-- PART 2 END -->
+  <!-- PART 3 START -->
+
+<script type="module">
+
+import { createClient }
+from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+const SUPABASE_URL =
+"https://tthkmezmyvnjufnrbezp.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_Pi3JraUChkZ_f5xGukdrlQ_f4Vzvhqw";
+
+const supabase =
+createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+let products = [];
+let cart = [];
+let currentProduct = null;
+let currentImages = [];
+let currentImageIndex = 0;
+let detailQty = 1;
+let selectedCategory = "all";
+let wishlist = [];
+
+
+/* =========================
+   PRODUCT IMAGES
+========================= */
+
+function getImages(product){
+
+  let images = [];
+
+  if(Array.isArray(product.image_urls)){
+    images = product.image_urls.filter(Boolean);
+  }
+
+  if(images.length === 0 && product.image_url){
+    images = [product.image_url];
+  }
+
+  return [...new Set(images)];
+}
+
+
+/* =========================
+   LOAD PRODUCTS
+========================= */
+
+async function loadProducts(){
+
+  const { data, error } =
+    await supabase
+      .from("products")
+      .select("*")
+      .order("id", { ascending:false });
+
+  if(error){
+
+    console.error(error);
+
+    document.getElementById("products").innerHTML =
+      `<div class="no-products">
+        Products load nahi ho rahe.
+      </div>`;
+
+    return;
+  }
+
+  products = data || [];
+
+  renderProducts();
+}
+
+
+/* =========================
+   RENDER PRODUCTS
+========================= */
+
+function renderProducts(){
+
+  const search =
+    document
+      .getElementById("searchInput")
+      .value
+      .trim()
+      .toLowerCase();
+
+  let filtered = products.filter(product => {
+
+    const name =
+      String(product.name || "").toLowerCase();
+
+    const description =
+      String(product.description || "").toLowerCase();
+
+    const text =
+      name + " " + description;
+
+    const matchesSearch =
+      !search || text.includes(search);
+
+    let matchesCategory = true;
+
+    if(selectedCategory !== "all"){
+
+      if(selectedCategory === "new"){
+        matchesCategory = true;
+      }
+
+      else if(selectedCategory === "wallet"){
+        matchesCategory =
+          text.includes("wallet");
+      }
+
+      else if(selectedCategory === "men"){
+        matchesCategory =
+          text.includes("men") ||
+          text.includes("shirt") ||
+          text.includes("shoe");
+      }
+
+      else if(selectedCategory === "accessories"){
+        matchesCategory =
+          text.includes("watch") ||
+          text.includes("accessor") ||
+          text.includes("sunglass") ||
+          text.includes("belt");
+      }
+    }
+
+    return matchesSearch && matchesCategory;
+
+  });
+
+
+  const container =
+    document.getElementById("products");
+
+  const resultCount =
+    document.getElementById("resultCount");
+
+
+  resultCount.textContent =
+    filtered.length +
+    " product(s)";
+
+
+  if(filtered.length === 0){
+
+    container.innerHTML =
+      `<div class="no-products">
+        🔍 No products found
+      </div>`;
+
+    return;
+  }
+
+
+  container.innerHTML =
+    filtered.map(product => {
+
+      const images =
+        getImages(product);
+
+      const firstImage =
+        images[0] || "";
+
+      const safeName =
+        escapeHtml(product.name || "");
+
+
+      return `
+
+        <div
+          class="product"
+          onclick="openProduct(${product.id})">
+
+          <div class="product-image">
+
+            ${
+              firstImage
+
+              ?
+
+              `<img
+                src="${firstImage}"
+                alt="${safeName}"
+                loading="lazy"
+                onerror="this.style.display='none'">`
+
+              :
+
+              `<div
+                style="
+                  height:100%;
+                  display:flex;
+                  align-items:center;
+                  justify-content:center;
+                  font-size:55px">
+
+                📦
+
+              </div>`
+            }
+
+
+            <span class="new-badge">
+              NEW
+            </span>
+
+
+            ${
+              images.length > 1
+
+              ?
+
+              `<span class="photo-count">
+                📷 ${images.length}
+              </span>`
+
+              :
+
+              ""
+            }
+
+
+            <button
+              class="wishlist"
+              onclick="toggleWishlist(event,${product.id})">
+
+              ♡
+
+            </button>
+
+          </div>
+
+
+          <div class="product-info">
+
+            <div class="product-name">
+              ${safeName}
+            </div>
+
+            <div class="product-price">
+              Rs.
+              ${Number(
+                product.price || 0
+              ).toLocaleString()}
+            </div>
+
+            <div class="product-meta">
+              ⭐ 4.8 &nbsp; | &nbsp;
+              🚚 COD
+            </div>
+
+          </div>
+
+        </div>
+
+      `;
+
+    }).join("");
+}
+
+
+/* =========================
+   OPEN PRODUCT
+========================= */
+
+window.openProduct =
+function(id){
+
+  currentProduct =
+    products.find(
+      p => p.id == id
+    );
+
+  if(!currentProduct){
+    return;
+  }
+
+  currentImages =
+    getImages(currentProduct);
+
+  currentImageIndex = 0;
+  detailQty = 1;
+
+  document.getElementById(
+    "detailName"
+  ).textContent =
+    currentProduct.name || "";
+
+  document.getElementById(
+    "detailPrice"
+  ).textContent =
+    "Rs. " +
+    Number(
+      currentProduct.price || 0
+    ).toLocaleString();
+
+  document.getElementById(
+    "detailDescription"
+  ).textContent =
+    currentProduct.description ||
+    "Premium quality product from Urban Store PK.";
+
+  document.getElementById(
+    "detailQty"
+  ).textContent = "1";
+
+  renderDetailImage();
+
+  document.getElementById(
+    "detailOverlay"
+  ).classList.add("active");
+
+};
+
+
+/* =========================
+   DETAIL IMAGE
+========================= */
+
+function renderDetailImage(){
+
+  const mainImage =
+    document.getElementById(
+      "detailMainImage"
+    );
+
+  if(currentImages.length){
+
+    mainImage.src =
+      currentImages[
+        currentImageIndex
+      ];
+
+    mainImage.style.display =
+      "block";
+
+  }else{
+
+    mainImage.src = "";
+    mainImage.style.display =
+      "none";
+  }
+
+
+  const thumbnails =
+    document.getElementById(
+      "thumbnails"
+    );
+
+
+  thumbnails.innerHTML =
+    currentImages.map(
+      (image,index) => `
+
+        <img
+          class="thumbnail ${
+            index === currentImageIndex
+            ? "active"
+            : ""
+          }"
+          src="${image}"
+          onclick="selectImage(${index})">
+
+      `
+    ).join("");
+
+}
+
+
+/* =========================
+   SELECT IMAGE
+========================= */
+
+window.selectImage =
+function(index){
+
+  if(
+    index < 0 ||
+    index >= currentImages.length
+  ){
+    return;
+  }
+
+  currentImageIndex = index;
+
+  renderDetailImage();
+};
+
+
+/* =========================
+   NEXT / PREVIOUS IMAGE
+========================= */
+
+function nextImage(){
+
+  if(!currentImages.length){
+    return;
+  }
+
+  currentImageIndex =
+    (currentImageIndex + 1) %
+    currentImages.length;
+
+  renderDetailImage();
+}
+
+
+function previousImage(){
+
+  if(!currentImages.length){
+    return;
+  }
+
+  currentImageIndex =
+    (currentImageIndex - 1 +
+      currentImages.length) %
+    currentImages.length;
+
+  renderDetailImage();
+}
+
+
+document
+  .getElementById("nextImage")
+  .addEventListener(
+    "click",
+    nextImage
+  );
+
+
+document
+  .getElementById("prevImage")
+  .addEventListener(
+    "click",
+    previousImage
+  );
+
+
+/* =========================
+   DETAIL QUANTITY
+========================= */
+
+document
+  .getElementById("detailPlus")
+  .addEventListener(
+    "click",
+    () => {
+
+      detailQty++;
+
+      document.getElementById(
+        "detailQty"
+      ).textContent =
+        detailQty;
+
+    }
+  );
+
+
+document
+  .getElementById("detailMinus")
+  .addEventListener(
+    "click",
+    () => {
+
+      if(detailQty > 1){
+        detailQty--;
+      }
+
+      document.getElementById(
+        "detailQty"
+      ).textContent =
+        detailQty;
+
+    }
+  );
+
+
+/* =========================
+   CLOSE DETAIL
+========================= */
+
+document
+  .getElementById("closeDetail")
+  .addEventListener(
+    "click",
+    () => {
+
+      document
+        .getElementById(
+          "detailOverlay"
+        )
+        .classList
+        .remove("active");
+
+    }
+  );
+
+
+/* =========================
+   ADD TO CART
+========================= */
+
+function addToCart(id, qty = 1){
+
+  const product =
+    products.find(
+      p => p.id == id
+    );
+
+  if(!product){
+    return;
+  }
+
+
+  const existing =
+    cart.find(
+      item => item.id == id
+    );
+
+
+  if(existing){
+
+    existing.qty += qty;
+
+  }else{
+
+    cart.push({
+      ...product,
+      qty:qty
+    });
+
+  }
+
+  updateCart();
+}
+
+
+document
+  .getElementById("detailAddCart")
+  .addEventListener(
+    "click",
+    () => {
+
+      if(!currentProduct){
+        return;
+      }
+
+      addToCart(
+        currentProduct.id,
+        detailQty
+      );
+
+      document
+        .getElementById(
+          "detailOverlay"
+        )
+        .classList
+        .remove("active");
+
+      openCart();
+
+    }
+  );
+
+
+/* =========================
+   BUY NOW
+========================= */
+
+document
+  .getElementById("detailBuyNow")
+  .addEventListener(
+    "click",
+    () => {
+
+      if(!currentProduct){
+        return;
+      }
+
+      addToCart(
+        currentProduct.id,
+        detailQty
+      );
+
+      document
+        .getElementById(
+          "detailOverlay"
+        )
+        .classList
+        .remove("active");
+
+      openCart();
+
+    }
+  );
+
+
+/* =========================
+   UPDATE CART
+========================= */
+
+function updateCart(){
+
+  const count =
+    cart.reduce(
+      (total,item) =>
+        total + item.qty,
+      0
+    );
+
+
+  document.getElementById(
+    "cartCount"
+  ).textContent =
+    count;
+
+
+  const container =
+    document.getElementById(
+      "cartItems"
+    );
+
+
+  if(cart.length === 0){
+
+    container.innerHTML =
+      `<div class="empty-cart">
+        🛒 Your cart is empty.
+      </div>`;
+
+  }else{
+
+    container.innerHTML =
+      cart.map(item => {
+
+        const images =
+          getImages(item);
+
+        const image =
+          images[0] || "";
+
+
+        return `
+
+          <div class="cart-item">
+
+            ${
+              image
+              ?
+              `<img
+                src="${image}"
+                alt="${escapeHtml(
+                  item.name
+                )}">`
+              :
+              ""
+            }
+
+
+            <div class="cart-item-info">
+
+              <b>
+                ${escapeHtml(
+                  item.name
+                )}
+              </b>
+
+              <div>
+                Rs.
+                ${Number(
+                  item.price || 0
+                ).toLocaleString()}
+              </div>
+
+
+              <div class="quantity">
+
+                <button
+                  onclick="
+                    changeQuantity(
+                      ${item.id},
+                      -1
+                    )">
+
+                  −
+
+                </button>
+
+
+                <span>
+                  ${item.qty}
+                </span>
+
+
+                <button
+                  onclick="
+                    changeQuantity(
+                      ${item.id},
+                      1
+                    )">
+
+                  +
+
+                </button>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        `;
+
+      }).join("");
+
+  }
+
+
+  const subtotal =
+    cart.reduce(
+      (total,item) =>
+        total +
+        Number(item.price || 0) *
+        item.qty,
+      0
+    );
+
+
+  const delivery =
+    cart.length ? 165 : 0;
+
+
+  const total =
+    subtotal + delivery;
+
+
+  document.getElementById(
+    "cartSubtotal"
+  ).textContent =
+    subtotal.toLocaleString();
+
+
+  document.getElementById(
+    "cartDelivery"
+  ).textContent =
+    delivery.toLocaleString();
+
+
+  document.getElementById(
+    "cartTotal"
+  ).textContent =
+    total.toLocaleString();
+
+}
+
+
+/* =========================
+   CHANGE CART QUANTITY
+========================= */
+
+window.changeQuantity =
+function(id,change){
+
+  const item =
+    cart.find(
+      x => x.id == id
+    );
+
+  if(!item){
+    return;
+  }
+
+
+  item.qty += change;
+
+
+  if(item.qty <= 0){
+
+    cart =
+      cart.filter(
+        x => x.id != id
+      );
+
+  }
+
+
+  updateCart();
+};
+
+
+/* =========================
+   OPEN / CLOSE CART
+========================= */
+
+function openCart(){
+
+  document
+    .getElementById("cart")
+    .classList
+    .add("active");
+
+}
+
+
+document
+  .getElementById("cartButton")
+  .addEventListener(
+    "click",
+    openCart
+  );
+
+
+document
+  .getElementById("closeCart")
+  .addEventListener(
+    "click",
+    () => {
+
+      document
+        .getElementById("cart")
+        .classList
+        .remove("active");
+
+    }
+  );
+
+
+/* =========================
+   PLACE COD ORDER
+========================= */
+
+document
+  .getElementById("placeOrder")
+  .addEventListener(
+    "click",
+    async () => {
+
+      const name =
+        document
+          .getElementById(
+            "customerName"
+          )
+          .value
+          .trim();
+
+      const phone =
+        document
+          .getElementById(
+            "phone"
+          )
+          .value
+          .trim();
+
+      const address =
+        document
+          .getElementById(
+            "address"
+          )
+          .value
+          .trim();
+
+      const city =
+        document
+          .getElementById(
+            "city"
+          )
+          .value
+          .trim();
+
+      const notes =
+        document
+          .getElementById(
+            "notes"
+          )
+          .value
+          .trim();
+
+      const message =
+        document
+          .getElementById(
+            "orderMessage"
+          );
+
+
+      if(cart.length === 0){
+
+        message.textContent =
+          "Cart empty hai.";
+
+        return;
+      }
+
+
+      if(
+        !name ||
+        !phone ||
+        !address ||
+        !city
+      ){
+
+        message.textContent =
+          "Name, phone, address aur city zaroori hain.";
+
+        return;
+      }
+
+
+      const subtotal =
+        cart.reduce(
+          (total,item) =>
+            total +
+            Number(item.price || 0) *
+            item.qty,
+          0
+        );
+
+
+      const total =
+        subtotal + 165;
+
+
+      const items =
+        cart.map(item => ({
+          id:item.id,
+          name:item.name,
+          price:item.price,
+          qty:item.qty
+        }));
+
+
+      message.textContent =
+        "Order place ho raha hai...";
+
+
+      const { error } =
+        await supabase
+          .from("orders")
+          .insert([{
+
+            customer_name:name,
+
+            phone:phone,
+
+            address:
+              city +
+              ", " +
+              address,
+
+            notes:notes,
+
+            items:items,
+
+            total:total,
+
+            status:"New"
+
+          }]);
+
+
+      if(error){
+
+        console.error(error);
+
+        message.textContent =
+          "Order save nahi hua: " +
+          error.message;
+
+        return;
+      }
+
+
+      message.textContent =
+        "✅ Order successfully place ho gaya!";
+
+
+      cart = [];
+
+      updateCart();
+
+
+      document.getElementById(
+        "customerName"
+      ).value = "";
+
+      document.getElementById(
+        "phone"
+      ).value = "";
+
+      document.getElementById(
+        "address"
+      ).value = "";
+
+      document.getElementById(
+        "city"
+      ).value = "";
+
+      document.getElementById(
+        "notes"
+      ).value = "";
+
+    }
+  );
+
+
+/* =========================
+   SEARCH
+========================= */
+
+document
+  .getElementById("searchButton")
+  .addEventListener(
+    "click",
+    renderProducts
+  );
+
+
+document
+  .getElementById("searchInput")
+  .addEventListener(
+    "input",
+    renderProducts
+  );
+
+
+/* =========================
+   CATEGORY FILTERS
+========================= */
+
+function setCategory(category){
+
+  selectedCategory =
+    category;
+
+  document
+    .querySelectorAll(
+      "[data-category]"
+    )
+    .forEach(button => {
+
+      button.classList.toggle(
+        "active",
+        button.dataset.category ===
+          category
+      );
+
+    });
+
+  renderProducts();
+}
+
+
+document
+  .querySelectorAll(
+    "[data-category]"
+  )
+  .forEach(button => {
+
+    button.addEventListener(
+      "click",
+      () => {
+
+        setCategory(
+          button.dataset.category
+        );
+
+      }
+    );
+
+  });
+
+
+/* =========================
+   SHOP NOW
+========================= */
+
+document
+  .getElementById("shopNow")
+  .addEventListener(
+    "click",
+    () => {
+
+      document
+        .getElementById("products")
+        .scrollIntoView({
+          behavior:"smooth"
+        });
+
+    }
+  );
+
+
+/* =========================
+   WISHLIST
+========================= */
+
+window.toggleWishlist =
+function(event,id){
+
+  event.stopPropagation();
+
+  const button =
+    event.currentTarget;
+
+
+  if(
+    wishlist.includes(id)
+  ){
+
+    wishlist =
+      wishlist.filter(
+        x => x !== id
+      );
+
+    button.classList.remove(
+      "active"
+    );
+
+    button.textContent =
+      "♡";
+
+  }else{
+
+    wishlist.push(id);
+
+    button.classList.add(
+      "active"
+    );
+
+    button.textContent =
+      "♥";
+
+  }
+
+};
+
+
+/* =========================
+   ESCAPE HTML
+========================= */
+
+function escapeHtml(text){
+
+  return String(text)
+    .replace(
+      /[&<>'"]/g,
+      char => ({
+
+        "&":"&amp;",
+        "<":"&lt;",
+        ">":"&gt;",
+        "'":"&#39;",
+        '"':"&quot;"
+
+      }[char])
+    );
+
+}
+
+
+/* =========================
+   ESC KEY
+========================= */
+
+document
+  .addEventListener(
+    "keydown",
+    event => {
+
+      if(event.key === "Escape"){
+
+        document
+          .getElementById(
+            "detailOverlay"
+          )
+          .classList
+          .remove("active");
+
+        document
+          .getElementById(
+            "cart"
+          )
+          .classList
+          .remove("active");
+
+      }
+
+    }
+  );
+
+
+/* =========================
+   START WEBSITE
+========================= */
+
+updateCart();
+
+loadProducts();
+
+</script>
+
+</body>
+</html>
+
+<!-- PART 3 END -->
   <!-- PRODUCT DETAIL -->
 <div id="detailOverlay" class="overlay">
   <div class="detail">
