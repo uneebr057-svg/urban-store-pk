@@ -3,136 +3,391 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Urban Store PK — Admin Panel</title>
+
+<title>Urban Store PK — Admin Dashboard</title>
 
 <style>
-*{box-sizing:border-box}
+
+*{
+  box-sizing:border-box;
+}
 
 body{
   margin:0;
-  font-family:Arial,sans-serif;
-  background:#f5f7fb;
-  color:#111827;
+  font-family:Arial,Helvetica,sans-serif;
+  background:#f5f5f5;
+  color:#222;
 }
 
-header{
-  background:#0f172a;
-  color:#fff;
-  padding:18px 5%;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-
-.logo{
-  font-size:24px;
-  font-weight:800;
-}
-
-.logout{
-  background:#ef4444;
-  color:#fff;
-  border:0;
-  padding:10px 15px;
-  border-radius:7px;
-  cursor:pointer;
-}
-
-.container{
-  max-width:1100px;
-  margin:auto;
-  padding:30px 20px;
-}
-
-.card{
-  background:#fff;
-  border:1px solid #e5e7eb;
-  border-radius:12px;
-  padding:22px;
-  margin-bottom:25px;
-}
-
-h2{margin-top:0}
-
-input,textarea{
-  width:100%;
-  padding:11px;
-  margin:6px 0 12px;
-  border:1px solid #cbd5e1;
-  border-radius:7px;
+button,
+input,
+textarea,
+select{
+  font-family:inherit;
 }
 
 button{
-  border:0;
-  border-radius:7px;
-  padding:11px 16px;
   cursor:pointer;
-  font-weight:700;
 }
 
-.primary{
-  background:#10b981;
+/* =========================
+   HEADER
+========================= */
+
+.header{
+  height:64px;
+  background:#f85606;
   color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 25px;
+  position:sticky;
+  top:0;
+  z-index:100;
 }
 
-.danger{
-  background:#ef4444;
-  color:#fff;
-}
-
-table{
-  width:100%;
-  border-collapse:collapse;
-}
-
-th,td{
-  padding:12px;
-  border-bottom:1px solid #e5e7eb;
-  text-align:left;
-  vertical-align:middle;
-}
-
-.product-image{
-  width:75px;
-  height:65px;
-  object-fit:cover;
-  border-radius:8px;
-  cursor:pointer;
-  border:1px solid #ddd;
-  transition:.2s;
-}
-
-.product-image:hover{
-  transform:scale(1.05);
-}
-
-.login{
-  max-width:420px;
-  margin:80px auto;
-}
-
-.hidden{
-  display:none;
-}
-
-.msg{
-  margin-top:10px;
-  color:#475569;
-}
-
-.profit{
+.logo{
+  font-size:23px;
   font-weight:800;
-  color:#10b981;
+}
+
+.logo small{
+  display:block;
+  font-size:9px;
+  letter-spacing:1px;
+  font-weight:400;
+  margin-top:2px;
+}
+
+.header-right{
+  display:flex;
+  align-items:center;
+  gap:15px;
+}
+
+.admin-name{
+  font-size:13px;
+}
+
+.logout{
+  border:1px solid #fff;
+  background:transparent;
+  color:#fff;
+  padding:9px 15px;
+  border-radius:5px;
+  font-weight:bold;
+}
+
+.logout:hover{
+  background:#fff;
+  color:#f85606;
+}
+
+
+/* =========================
+   LAYOUT
+========================= */
+
+.layout{
+  display:flex;
+  min-height:calc(100vh - 64px);
+}
+
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar{
+  width:235px;
+  background:#fff;
+  border-right:1px solid #e5e5e5;
+  padding:20px 12px;
+  flex-shrink:0;
+}
+
+.sidebar-title{
+  color:#999;
+  font-size:11px;
+  font-weight:bold;
+  padding:10px 13px;
+  text-transform:uppercase;
+}
+
+.sidebar button{
+  width:100%;
+  border:0;
+  background:transparent;
+  text-align:left;
+  padding:13px;
+  border-radius:6px;
+  color:#555;
+  font-size:14px;
+  margin-bottom:4px;
+}
+
+.sidebar button:hover,
+.sidebar button.active{
+  background:#fff0e9;
+  color:#f85606;
+  font-weight:bold;
+}
+
+
+/* =========================
+   MAIN
+========================= */
+
+.main{
+  flex:1;
+  min-width:0;
+  padding:25px;
+}
+
+.page-title{
+  margin:0;
+  font-size:26px;
+}
+
+.page-subtitle{
+  margin:7px 0 22px;
+  color:#777;
+  font-size:13px;
+}
+
+
+/* =========================
+   LOGIN
+========================= */
+
+.login-screen{
+  min-height:100vh;
+  background:#f5f5f5;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+.login-card{
+  width:100%;
+  max-width:420px;
+  background:#fff;
+  border-radius:10px;
+  padding:30px;
+  box-shadow:0 4px 25px #0002;
+}
+
+.login-logo{
+  text-align:center;
+  color:#f85606;
+  font-size:27px;
+  font-weight:800;
+  margin-bottom:5px;
+}
+
+.login-subtitle{
+  text-align:center;
+  color:#888;
+  font-size:13px;
+  margin-bottom:25px;
+}
+
+.form-label{
+  display:block;
+  font-size:13px;
+  font-weight:bold;
+  margin-bottom:6px;
+}
+
+.form-input,
+.form-textarea,
+.form-select{
+  width:100%;
+  border:1px solid #ddd;
+  border-radius:5px;
+  padding:12px;
+  outline:none;
+  margin-bottom:15px;
+}
+
+.form-input:focus,
+.form-textarea:focus,
+.form-select:focus{
+  border-color:#f85606;
+}
+
+.login-btn{
+  width:100%;
+  border:0;
+  background:#f85606;
+  color:#fff;
+  padding:13px;
+  border-radius:5px;
+  font-weight:bold;
+  font-size:15px;
+}
+
+.login-message{
+  margin-top:12px;
+  text-align:center;
+  font-size:13px;
+  color:#777;
+}
+
+
+/* =========================
+   DASHBOARD CARDS
+========================= */
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px;
+  margin-bottom:25px;
+}
+
+.stat-card{
+  background:#fff;
+  border-radius:8px;
+  padding:20px;
+  box-shadow:0 1px 6px #0001;
+}
+
+.stat-icon{
+  font-size:26px;
+}
+
+.stat-label{
+  color:#888;
+  font-size:12px;
+  margin-top:10px;
+}
+
+.stat-value{
+  font-size:25px;
+  font-weight:800;
+  margin-top:5px;
+}
+
+.stat-orange{
+  color:#f85606;
+}
+
+.stat-green{
+  color:#10a66a;
+}
+
+.stat-blue{
+  color:#2563eb;
+}
+
+.stat-purple{
+  color:#7c3aed;
+}
+
+
+/* =========================
+   CARD
+========================= */
+
+.card{
+  background:#fff;
+  border-radius:8px;
+  padding:22px;
+  margin-bottom:22px;
+  box-shadow:0 1px 6px #0001;
+}
+
+.card-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  margin-bottom:18px;
+}
+
+.card-title{
+  margin:0;
+  font-size:19px;
+}
+
+.card-description{
+  color:#888;
+  font-size:12px;
+  margin-top:5px;
+}
+
+
+/* =========================
+   PRODUCT FORM
+========================= */
+
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+}
+
+.form-group{
+  min-width:0;
+}
+
+.full{
+  grid-column:1/-1;
+}
+
+.add-product-btn{
+  border:0;
+  background:#f85606;
+  color:#fff;
+  padding:13px 22px;
+  border-radius:5px;
+  font-weight:bold;
+  margin-top:5px;
+}
+
+.add-product-btn:hover{
+  background:#d94800;
+}
+
+.profit-preview{
+  background:#f0fff8;
+  border:1px solid #b7efd7;
+  color:#07935c;
+  padding:12px;
+  border-radius:5px;
+  font-weight:bold;
+  margin-top:5px;
+}
+
+
+/* =========================
+   IMAGE UPLOAD
+========================= */
+
+.upload-area{
+  border:2px dashed #ddd;
+  border-radius:7px;
+  padding:22px;
+  text-align:center;
+  background:#fafafa;
+}
+
+.upload-area:hover{
+  border-color:#f85606;
 }
 
 .upload-label{
   display:inline-block;
-  background:#2563eb;
-  color:#fff;
-  padding:11px 16px;
-  border-radius:7px;
+  background:#fff0e9;
+  color:#f85606;
+  border:1px solid #f85606;
+  padding:10px 17px;
+  border-radius:5px;
+  font-weight:bold;
   cursor:pointer;
-  font-weight:700;
 }
 
 #imageFiles{
@@ -141,22 +396,25 @@ th,td{
 
 .upload-status{
   margin-top:10px;
-  color:#475569;
+  color:#777;
+  font-size:12px;
 }
 
 .preview-grid{
   display:flex;
   gap:10px;
   flex-wrap:wrap;
-  margin-top:12px;
+  margin-top:15px;
 }
 
 .preview-item{
-  width:110px;
-  height:100px;
+  width:105px;
+  height:95px;
   border:1px solid #ddd;
-  border-radius:8px;
+  border-radius:6px;
   overflow:hidden;
+  position:relative;
+  background:#eee;
 }
 
 .preview-item img{
@@ -165,12 +423,952 @@ th,td{
   object-fit:cover;
 }
 
-/* GALLERY */
 
-.gallery-overlay{
+/* =========================
+   TABLE
+========================= */
+
+.table-wrap{
+  width:100%;
+  overflow-x:auto;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:750px;
+}
+
+th{
+  background:#fafafa;
+  color:#666;
+  font-size:12px;
+  font-weight:bold;
+}
+
+th,
+td{
+  padding:13px 10px;
+  border-bottom:1px solid #eee;
+  text-align:left;
+  vertical-align:middle;
+}
+
+td{
+  font-size:13px;
+}
+
+.product-table-image{
+  width:65px;
+  height:65px;
+  border-radius:5px;
+  object-fit:cover;
+  background:#eee;
+}
+
+.product-table-name{
+  font-weight:bold;
+}
+
+.product-table-desc{
+  color:#888;
+  font-size:11px;
+  margin-top:4px;
+  max-width:230px;
+}
+
+.profit{
+  color:#07935c;
+  font-weight:bold;
+}
+
+.delete-btn{
+  border:0;
+  background:#fee2e2;
+  color:#dc2626;
+  padding:8px 11px;
+  border-radius:4px;
+  font-weight:bold;
+}
+
+.delete-btn:hover{
+  background:#dc2626;
+  color:#fff;
+}
+
+
+/* =========================
+   ORDER STATUS
+========================= */
+
+.status-select{
+  border:1px solid #ddd;
+  border-radius:4px;
+  padding:7px;
+  background:#fff;
+  font-size:12px;
+}
+
+.status-new{
+  color:#2563eb;
+  font-weight:bold;
+}
+
+.status-confirmed{
+  color:#7c3aed;
+  font-weight:bold;
+}
+
+.status-shipped{
+  color:#ea580c;
+  font-weight:bold;
+}
+
+.status-delivered{
+  color:#07935c;
+  font-weight:bold;
+}
+
+.status-cancelled{
+  color:#dc2626;
+  font-weight:bold;
+}
+
+
+/* =========================
+   EMPTY
+========================= */
+
+.empty{
+  padding:45px;
+  text-align:center;
+  color:#888;
+}
+
+
+/* =========================
+   HIDDEN
+========================= */
+
+.hidden{
+  display:none !important;
+}
+
+
+/* =========================
+   MESSAGE
+========================= */
+
+.message{
+  margin-top:12px;
+  font-size:13px;
+  color:#666;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:1000px){
+
+  .stats{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .sidebar{
+    width:190px;
+  }
+
+}
+
+
+@media(max-width:700px){
+
+  .header{
+    padding:0 12px;
+  }
+
+  .admin-name{
+    display:none;
+  }
+
+  .logo{
+    font-size:19px;
+  }
+
+  .sidebar{
+    width:60px;
+    padding:15px 7px;
+  }
+
+  .sidebar-title{
+    display:none;
+  }
+
+  .sidebar button{
+    text-align:center;
+    font-size:0;
+    padding:13px 5px;
+  }
+
+  .sidebar button:first-letter{
+    font-size:20px;
+  }
+
+  .main{
+    padding:15px;
+  }
+
+  .stats{
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .full{
+    grid-column:auto;
+  }
+
+}
+
+
+@media(max-width:480px){
+
+  .stats{
+    grid-template-columns:1fr;
+  }
+
+  .card{
+    padding:15px;
+  }
+
+  .page-title{
+    font-size:22px;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- =========================
+     LOGIN SCREEN
+========================= -->
+
+<div
+  id="loginBox"
+  class="login-screen">
+
+  <div class="login-card">
+
+    <div class="login-logo">
+      Urban Store PK
+    </div>
+
+    <div class="login-subtitle">
+      Admin Dashboard
+    </div>
+
+    <label class="form-label">
+      Admin Email
+    </label>
+
+    <input
+      id="email"
+      class="form-input"
+      type="email"
+      placeholder="Enter admin email">
+
+
+    <label class="form-label">
+      Password
+    </label>
+
+    <input
+      id="password"
+      class="form-input"
+      type="password"
+      placeholder="Enter password">
+
+
+    <button
+      id="loginBtn"
+      class="login-btn">
+
+      Login to Dashboard
+
+    </button>
+
+    <div
+      id="loginMsg"
+      class="login-message">
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =========================
+     ADMIN APP
+========================= -->
+
+<div
+  id="adminApp"
+  class="hidden">
+
+  <header class="header">
+
+    <div class="logo">
+      Urban Store PK
+      <small>ADMIN DASHBOARD</small>
+    </div>
+
+    <div class="header-right">
+
+      <span class="admin-name">
+        👤 Administrator
+      </span>
+
+      <button
+        id="logoutBtn"
+        class="logout">
+
+        Logout
+
+      </button>
+
+    </div>
+
+  </header>
+
+
+  <div class="layout">
+
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+      <div class="sidebar-title">
+        Management
+      </div>
+
+      <button
+        class="active"
+        data-section="dashboard">
+
+        📊 Dashboard
+
+      </button>
+
+      <button
+        data-section="products">
+
+        📦 Products
+
+      </button>
+
+      <button
+        data-section="addProduct">
+
+        ➕ Add Product
+
+      </button>
+
+      <button
+        data-section="orders">
+
+        🛒 Orders
+
+      </button>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="main">
+
+      <h1 class="page-title">
+        Dashboard
+      </h1>
+
+      <p class="page-subtitle">
+        Urban Store PK — Store management panel
+      </p>
+
+
+      <!-- STATS -->
+
+      <div class="stats">
+
+        <div class="stat-card">
+
+          <div class="stat-icon">
+            📦
+          </div>
+
+          <div class="stat-label">
+            TOTAL PRODUCTS
+          </div>
+
+          <div
+            id="totalProducts"
+            class="stat-value stat-orange">
+
+            0
+
+          </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div class="stat-icon">
+            🛒
+          </div>
+
+          <div class="stat-label">
+            TOTAL ORDERS
+          </div>
+
+          <div
+            id="totalOrders"
+            class="stat-value stat-blue">
+
+            0
+
+          </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div class="stat-icon">
+            💰
+          </div>
+
+          <div class="stat-label">
+            SALES
+          </div>
+
+          <div
+            id="totalSales"
+            class="stat-value stat-green">
+
+            Rs. 0
+
+          </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div class="stat-icon">
+            📈
+          </div>
+
+          <div class="stat-label">
+            POTENTIAL PROFIT
+          </div>
+
+          <div
+            id="totalProfit"
+            class="stat-value stat-purple">
+
+            Rs. 0
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- ADD PRODUCT -->
+
+      <section
+        id="addProductSection"
+        class="card">
+
+        <div class="card-header">
+
+          <div>
+
+            <h2 class="card-title">
+              ➕ Add New Product
+            </h2>
+
+            <div class="card-description">
+              Add product details and up to 5 pictures.
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="form-grid">
+
+
+          <div class="form-group">
+
+            <label class="form-label">
+              Product Name *
+            </label>
+
+            <input
+              id="productName"
+              class="form-input"
+              placeholder="e.g. Premium Leather Wallet">
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label class="form-label">
+              Category
+            </label>
+
+            <select
+              id="productCategory"
+              class="form-select">
+
+              <option value="all">
+                Select Category
+              </option>
+
+              <option value="wallet">
+                Wallets
+              </option>
+
+              <option value="men">
+                Men's Fashion
+              </option>
+
+              <option value="accessories">
+                Accessories
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <div class="form-group full">
+
+            <label class="form-label">
+              Description
+            </label>
+
+            <textarea
+              id="productDescription"
+              class="form-textarea"
+              rows="4"
+              placeholder="Write product description..."></textarea>
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label class="form-label">
+              Cost Price *
+            </label>
+
+            <input
+              id="costPrice"
+              class="form-input"
+              type="number"
+              placeholder="e.g. 795">
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label class="form-label">
+              Selling Price *
+            </label>
+
+            <input
+              id="sellingPrice"
+              class="form-input"
+              type="number"
+              placeholder="e.g. 999">
+
+          </div>
+
+
+          <div class="form-group full">
+
+            <div
+              id="profitPreview"
+              class="profit-preview">
+
+              💰 Profit:
+              Rs. 0
+
+            </div>
+
+          </div>
+
+
+          <div class="form-group full">
+
+            <label class="form-label">
+              Product Pictures — Maximum 5
+            </label>
+
+            <div class="upload-area">
+
+              <label
+                for="imageFiles"
+                class="upload-label">
+
+                📷 Choose Product Pictures
+
+              </label>
+
+              <input
+                id="imageFiles"
+                type="file"
+                accept="image/*"
+                multiple>
+
+              <div
+                id="uploadStatus"
+                class="upload-status">
+
+                No pictures selected
+
+              </div>
+
+              <div
+                id="imagePreview"
+                class="preview-grid">
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="form-group full">
+
+            <button
+              id="addProductBtn"
+              class="add-product-btn">
+
+              ➕ Add Product
+
+            </button>
+
+            <div
+              id="productMsg"
+              class="message">
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- PART 1 ENDS HERE -->
+      <!-- PART 2 START -->
+
+<section class="products-section">
+
+  <div class="products-header">
+
+    <div>
+      <h2>Products</h2>
+      <p class="section-subtitle">
+        Manage your Urban Store PK products
+      </p>
+    </div>
+
+    <div class="product-count">
+      <span id="productCount">0</span> Products
+    </div>
+
+  </div>
+
+
+  <div
+    id="productsTable"
+    class="products-table">
+
+    <div class="empty-products">
+      Products loading...
+    </div>
+
+  </div>
+
+</section>
+
+
+<section class="orders-section">
+
+  <div class="orders-header">
+
+    <div>
+      <h2>Orders</h2>
+      <p class="section-subtitle">
+        Customer orders and COD details
+      </p>
+    </div>
+
+    <div class="order-count">
+      <span id="orderCount">0</span> Orders
+    </div>
+
+  </div>
+
+
+  <div
+    id="ordersTable"
+    class="orders-table">
+
+    <div class="empty-orders">
+      Orders loading...
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- PRODUCT IMAGE PREVIEW -->
+
+<div
+  id="imagePreviewOverlay"
+  class="image-preview-overlay">
+
+  <div class="image-preview-box">
+
+    <button
+      id="closeImagePreview"
+      class="preview-close">
+      ×
+    </button>
+
+    <img
+      id="previewImage"
+      src=""
+      alt="Product Image">
+
+  </div>
+
+</div>
+
+
+<!-- DELETE CONFIRMATION -->
+
+<div
+  id="deleteOverlay"
+  class="delete-overlay">
+
+  <div class="delete-box">
+
+    <h3>
+      Delete Product?
+    </h3>
+
+    <p>
+      Are you sure you want to delete this product?
+    </p>
+
+    <div class="delete-buttons">
+
+      <button
+        id="cancelDelete"
+        class="cancel-delete">
+
+        Cancel
+
+      </button>
+
+      <button
+        id="confirmDelete"
+        class="confirm-delete">
+
+        Delete
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- PART 2 ENDS HERE -->
+      <!-- PART 3 START -->
+
+<style>
+
+.admin-footer{
+  background:#222;
+  color:#ddd;
+  text-align:center;
+  padding:25px;
+  margin-top:30px;
+}
+
+.products-section,
+.orders-section{
+  max-width:1200px;
+  margin:25px auto;
+  padding:0 15px;
+}
+
+.products-header,
+.orders-header{
+  background:#fff;
+  padding:18px;
+  border-radius:8px 8px 0 0;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid #eee;
+}
+
+.products-header h2,
+.orders-header h2{
+  margin:0;
+  color:#222;
+}
+
+.section-subtitle{
+  margin:5px 0 0;
+  color:#888;
+  font-size:13px;
+}
+
+.product-count,
+.order-count{
+  color:#f85606;
+  font-weight:bold;
+}
+
+.products-table,
+.orders-table{
+  background:#fff;
+  border-radius:0 0 8px 8px;
+  overflow:auto;
+}
+
+.product-row{
+  min-width:850px;
+  display:grid;
+  grid-template-columns:100px 1.5fr 120px 120px 120px 100px;
+  align-items:center;
+  gap:10px;
+  padding:14px;
+  border-bottom:1px solid #eee;
+}
+
+.product-row.header-row{
+  background:#fafafa;
+  font-weight:bold;
+  color:#555;
+}
+
+.product-thumb{
+  width:75px;
+  height:75px;
+  object-fit:cover;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+.product-name-admin{
+  font-weight:bold;
+}
+
+.product-small{
+  color:#888;
+  font-size:12px;
+  margin-top:4px;
+}
+
+.admin-price{
+  color:#f85606;
+  font-weight:bold;
+}
+
+.profit{
+  color:#168a3a;
+  font-weight:bold;
+}
+
+.delete-btn{
+  border:0;
+  background:#ffe8e8;
+  color:#d60000;
+  padding:8px 12px;
+  border-radius:5px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.delete-btn:hover{
+  background:#ffd0d0;
+}
+
+.order-row{
+  min-width:900px;
+  display:grid;
+  grid-template-columns:150px 130px 1.5fr 120px 120px;
+  gap:10px;
+  align-items:center;
+  padding:14px;
+  border-bottom:1px solid #eee;
+}
+
+.order-row.header-row{
+  background:#fafafa;
+  font-weight:bold;
+  color:#555;
+}
+
+.status-badge{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:20px;
+  background:#fff0e9;
+  color:#f85606;
+  font-size:12px;
+  font-weight:bold;
+}
+
+.empty-products,
+.empty-orders{
+  padding:45px;
+  text-align:center;
+  color:#888;
+}
+
+.image-preview-overlay,
+.delete-overlay{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,.88);
+  background:#0009;
   z-index:9999;
   display:none;
   align-items:center;
@@ -178,369 +1376,119 @@ th,td{
   padding:20px;
 }
 
-.gallery-overlay.show{
+.image-preview-overlay.active,
+.delete-overlay.active{
   display:flex;
 }
 
-.gallery-box{
-  width:min(900px,100%);
-  text-align:center;
+.image-preview-box{
   position:relative;
+  background:#fff;
+  padding:15px;
+  border-radius:8px;
+  max-width:90vw;
+  max-height:90vh;
 }
 
-.gallery-main{
-  max-width:100%;
-  max-height:65vh;
+.image-preview-box img{
+  max-width:80vw;
+  max-height:80vh;
   object-fit:contain;
-  border-radius:10px;
 }
 
-.gallery-title{
-  color:#fff;
-  font-size:21px;
-  font-weight:700;
-  margin-bottom:15px;
-}
-
-.gallery-close{
-  position:fixed;
-  top:18px;
-  right:20px;
-  width:45px;
-  height:45px;
-  border-radius:50%;
-  background:#ef4444;
-  color:#fff;
-  font-size:25px;
-  padding:0;
-  z-index:10001;
-}
-
-.gallery-arrow{
-  position:fixed;
-  top:50%;
-  transform:translateY(-50%);
-  width:48px;
-  height:48px;
+.preview-close{
+  position:absolute;
+  right:-12px;
+  top:-12px;
+  width:35px;
+  height:35px;
+  border:0;
   border-radius:50%;
   background:#fff;
-  color:#111;
-  font-size:30px;
-  padding:0;
-  z-index:10001;
-}
-
-.gallery-prev{
-  left:20px;
-}
-
-.gallery-next{
-  right:20px;
-}
-
-.gallery-thumbnails{
-  display:flex;
-  justify-content:center;
-  gap:8px;
-  flex-wrap:wrap;
-  margin-top:15px;
-}
-
-.gallery-thumb{
-  width:65px;
-  height:55px;
-  object-fit:cover;
-  border-radius:6px;
+  font-size:24px;
   cursor:pointer;
-  border:2px solid transparent;
 }
 
-.gallery-thumb.active{
-  border-color:#10b981;
+.delete-box{
+  width:min(400px,100%);
+  background:#fff;
+  border-radius:10px;
+  padding:25px;
+  text-align:center;
 }
 
-.picture-count{
-  font-size:12px;
-  color:#64748b;
+.delete-box h3{
+  margin-top:0;
 }
 
-@media(max-width:600px){
+.delete-box p{
+  color:#777;
+}
 
-  header{
-    padding:15px;
+.delete-buttons{
+  display:flex;
+  gap:10px;
+  margin-top:20px;
+}
+
+.delete-buttons button{
+  flex:1;
+  padding:12px;
+  border:0;
+  border-radius:5px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.cancel-delete{
+  background:#eee;
+}
+
+.confirm-delete{
+  background:#e53935;
+  color:#fff;
+}
+
+@media(max-width:700px){
+
+  .products-header,
+  .orders-header{
+    align-items:flex-start;
+    gap:10px;
+    flex-direction:column;
   }
 
-  .logo{
-    font-size:18px;
+  .product-row{
+    grid-template-columns:80px 1fr 100px 100px 100px 90px;
   }
 
-  .container{
-    padding:20px 10px;
-  }
-
-  .gallery-main{
-    max-height:55vh;
-  }
-
-  .gallery-prev{
-    left:8px;
-  }
-
-  .gallery-next{
-    right:8px;
-  }
-
-  .gallery-arrow{
-    width:42px;
-    height:42px;
+  .order-row{
+    grid-template-columns:130px 120px 250px 100px 100px;
   }
 
 }
+
 </style>
-</head>
 
-<body>
 
-<header>
-  <div class="logo">Urban Store PK — Admin</div>
-  <button class="logout" id="logoutBtn">Logout</button>
-</header>
+<footer class="admin-footer">
 
-<div class="container">
+  Urban Store PK Admin
 
-<div id="loginBox" class="card login">
+  <br>
 
-<h2>Admin Login</h2>
+  © 2026 Urban Store PK
 
-<input
-id="email"
-type="email"
-placeholder="Admin Email">
+</footer>
 
-<input
-id="password"
-type="password"
-placeholder="Password">
 
-<button
-class="primary"
-id="loginBtn">
-Login
-</button>
-
-<div id="loginMsg" class="msg"></div>
-
-</div>
-
-
-<div id="adminPanel" class="hidden">
-
-<div class="card">
-
-<h2>Add New Product</h2>
-
-<label>Product Name</label>
-
-<input
-id="productName"
-placeholder="e.g. Premium Leather Wallet">
-
-
-<label>Description</label>
-
-<textarea
-id="productDescription"
-placeholder="Product description"></textarea>
-
-
-<label>Cost Price</label>
-
-<input
-id="costPrice"
-type="number"
-placeholder="e.g. 795">
-
-
-<label>Selling Price</label>
-
-<input
-id="sellingPrice"
-type="number"
-placeholder="e.g. 999">
-
-
-<label>Product Pictures (Maximum 5)</label>
-
-<br><br>
-
-<label
-for="imageFiles"
-class="upload-label">
-
-📷 Choose Product Pictures
-
-</label>
-
-<input
-id="imageFiles"
-type="file"
-accept="image/*"
-multiple>
-
-<div
-id="uploadStatus"
-class="upload-status">
-
-No pictures selected
-
-</div>
-
-<div
-id="imagePreview"
-class="preview-grid">
-</div>
-
-<div
-id="profitPreview"
-class="profit">
-
-Profit: Rs. 0
-
-</div>
-
-<br>
-
-<button
-class="primary"
-id="addProductBtn">
-
-Add Product
-
-</button>
-
-<div
-id="productMsg"
-class="msg">
-</div>
-
-</div>
-
-
-<div class="card">
-
-<h2>Products</h2>
-
-<div style="overflow-x:auto">
-
-<table>
-
-<thead>
-
-<tr>
-<th>Image</th>
-<th>Product</th>
-<th>Cost</th>
-<th>Selling</th>
-<th>Profit</th>
-<th>Action</th>
-</tr>
-
-</thead>
-
-<tbody id="productsTable"></tbody>
-
-</table>
-
-</div>
-
-</div>
-
-
-<div class="card">
-
-<h2>Orders</h2>
-
-<div style="overflow-x:auto">
-
-<table>
-
-<thead>
-
-<tr>
-<th>Customer</th>
-<th>Phone</th>
-<th>Address</th>
-<th>Total</th>
-<th>Status</th>
-</tr>
-
-</thead>
-
-<tbody id="ordersTable"></tbody>
-
-</table>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-
-<!-- PRODUCT GALLERY -->
-
-<div
-id="galleryOverlay"
-class="gallery-overlay">
-
-<button
-id="galleryClose"
-class="gallery-close">
-
-×
-</button>
-
-<button
-id="galleryPrev"
-class="gallery-arrow gallery-prev">
-
-‹
-</button>
-
-<div class="gallery-box">
-
-<div
-id="galleryTitle"
-class="gallery-title">
-</div>
-
-<img
-id="galleryMain"
-class="gallery-main"
-src=""
-alt="Product">
-
-<div
-id="galleryThumbnails"
-class="gallery-thumbnails">
-</div>
-
-</div>
-
-<button
-id="galleryNext"
-class="gallery-arrow gallery-next">
-
-›
-</button>
-
-</div>
 <script type="module">
 
-import { createClient }
-from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+import {
+  createClient
+}
+from
+"https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
 
 const SUPABASE_URL =
@@ -553,1009 +1501,910 @@ const SUPABASE_KEY =
 
 const supabase =
 createClient(
-SUPABASE_URL,
-SUPABASE_KEY
+  SUPABASE_URL,
+  SUPABASE_KEY
 );
 
 
-const loginBox =
-document.getElementById("loginBox");
+let products = [];
 
-const adminPanel =
-document.getElementById("adminPanel");
+let orders = [];
 
-const loginMsg =
-document.getElementById("loginMsg");
+let deleteProductId = null;
 
 
-async function checkLogin(){
+/* GET PRODUCT IMAGES */
 
-const {data} =
-await supabase.auth.getSession();
+function getImages(product){
 
-if(data.session){
+  let images = [];
 
-loginBox.classList.add("hidden");
+  if(
+    Array.isArray(product.image_urls)
+  ){
 
-adminPanel.classList.remove("hidden");
+    images =
+      product.image_urls
+      .filter(Boolean);
 
-loadProducts();
-loadOrders();
+  }
 
-}else{
+  if(
+    images.length === 0 &&
+    product.image_url
+  ){
 
-loginBox.classList.remove("hidden");
+    images = [
+      product.image_url
+    ];
 
-adminPanel.classList.add("hidden");
+  }
 
-}
-
-}
-
-
-document
-.getElementById("loginBtn")
-.addEventListener("click",async()=>{
-
-const email =
-document
-.getElementById("email")
-.value
-.trim();
-
-const password =
-document
-.getElementById("password")
-.value;
-
-
-if(!email || !password){
-
-loginMsg.textContent =
-"Email aur password enter karein.";
-
-return;
+  return [
+    ...new Set(images)
+  ];
 
 }
 
 
-loginMsg.textContent =
-"Logging in...";
+/* LOAD PRODUCTS */
+
+async function loadProducts(){
+
+  const {
+    data,
+    error
+  } =
+  await supabase
+  .from("products")
+  .select("*")
+  .order(
+    "id",
+    {
+      ascending:false
+    }
+  );
 
 
-const {error} =
-await supabase.auth.signInWithPassword({
+  if(error){
 
-email,
-password
+    console.error(error);
 
-});
+    document
+    .getElementById("productsTable")
+    .innerHTML =
+    `<div class="empty-products">
+      Products load nahi ho rahe.
+    </div>`;
 
+    return;
 
-if(error){
-
-loginMsg.textContent =
-"Login failed: " +
-error.message;
-
-return;
-
-}
+  }
 
 
-checkLogin();
-
-});
-
-
-document
-.getElementById("logoutBtn")
-.addEventListener("click",async()=>{
-
-await supabase.auth.signOut();
-
-checkLogin();
-
-});
+  products =
+    data || [];
 
 
-const costInput =
-document.getElementById("costPrice");
-
-const sellingInput =
-document.getElementById("sellingPrice");
-
-
-function calculateProfit(){
-
-const cost =
-Number(costInput.value) || 0;
-
-const selling =
-Number(sellingInput.value) || 0;
-
-const profit =
-selling-cost;
-
-
-document
-.getElementById("profitPreview")
-.textContent =
-"Profit: Rs. " +
-profit.toLocaleString();
+  renderProducts();
 
 }
 
 
-costInput.addEventListener(
-"input",
-calculateProfit
-);
+/* RENDER PRODUCTS */
 
-sellingInput.addEventListener(
-"input",
-calculateProfit
-);
+function renderProducts(){
 
-
-const imageFiles =
-document.getElementById("imageFiles");
-
-const imagePreview =
-document.getElementById("imagePreview");
-
-const uploadStatus =
-document.getElementById("uploadStatus");
+  const container =
+    document
+    .getElementById(
+      "productsTable"
+    );
 
 
-imageFiles.addEventListener(
-"change",
-()=>{
-
-const files =
-Array.from(imageFiles.files);
-
-
-imagePreview.innerHTML="";
+  document
+  .getElementById(
+    "productCount"
+  )
+  .textContent =
+    products.length;
 
 
-if(files.length===0){
+  if(products.length === 0){
 
-uploadStatus.textContent =
-"No pictures selected";
+    container.innerHTML =
+    `<div class="empty-products">
+      Abhi koi product nahi hai.
+    </div>`;
 
-return;
+    return;
+
+  }
+
+
+  container.innerHTML = `
+
+    <div class="product-row header-row">
+
+      <div>Image</div>
+      <div>Product</div>
+      <div>Cost</div>
+      <div>Selling</div>
+      <div>Profit</div>
+      <div>Action</div>
+
+    </div>
+
+    ${
+      products
+      .map(product => {
+
+        const images =
+          getImages(product);
+
+        const image =
+          images[0] || "";
+
+        const cost =
+          Number(
+            product.cost_price || 0
+          );
+
+        const selling =
+          Number(
+            product.price || 0
+          );
+
+        const profit =
+          selling - cost;
+
+
+        return `
+
+          <div class="product-row">
+
+            <div>
+
+              ${
+                image
+
+                ?
+
+                `<img
+                  class="product-thumb"
+                  src="${image}"
+                  onclick="showImage('${image}')">`
+
+                :
+
+                `📦`
+
+              }
+
+            </div>
+
+
+            <div>
+
+              <div class="product-name-admin">
+
+                ${escapeHtml(
+                  product.name || ""
+                )}
+
+              </div>
+
+              <div class="product-small">
+
+                ${images.length}
+                picture(s)
+
+              </div>
+
+            </div>
+
+
+            <div class="admin-price">
+
+              Rs.
+              ${cost.toLocaleString()}
+
+            </div>
+
+
+            <div class="admin-price">
+
+              Rs.
+              ${selling.toLocaleString()}
+
+            </div>
+
+
+            <div class="profit">
+
+              Rs.
+              ${profit.toLocaleString()}
+
+            </div>
+
+
+            <div>
+
+              <button
+                class="delete-btn"
+                onclick="askDelete(${product.id})">
+
+                Delete
+
+              </button>
+
+            </div>
+
+          </div>
+
+        `;
+
+      })
+      .join("")
+    }
+
+  `;
 
 }
 
 
-if(files.length>5){
-
-alert(
-"Maximum 5 pictures select karein."
-);
-
-imageFiles.value="";
-
-uploadStatus.textContent =
-"Maximum 5 pictures allowed";
-
-return;
-
-}
-
-
-uploadStatus.textContent =
-files.length +
-" picture(s) selected";
-
-
-files.forEach(file=>{
-
-const url =
-URL.createObjectURL(file);
-
-
-const div =
-document.createElement("div");
-
-div.className =
-"preview-item";
-
-
-const img =
-document.createElement("img");
-
-img.src=url;
-
-div.appendChild(img);
-
-imagePreview.appendChild(div);
-
-});
-
-});
-
-
-document
-.getElementById("addProductBtn")
-.addEventListener("click",async()=>{
-
-const name =
-document
-.getElementById("productName")
-.value
-.trim();
-
-
-const description =
-document
-.getElementById("productDescription")
-.value
-.trim();
-
-
-const cost =
-Number(costInput.value);
-
-
-const price =
-Number(sellingInput.value);
-
-
-const files =
-Array.from(imageFiles.files);
-
-
-const msg =
-document
-.getElementById("productMsg");
-
-
-if(!name || !cost || !price){
-
-msg.textContent =
-"Product name, cost price aur selling price zaroori hain.";
-
-return;
-
-}
-
-
-if(files.length>5){
-
-msg.textContent =
-"Maximum 5 pictures allowed hain.";
-
-return;
-
-}
-
-
-msg.textContent =
-"Product add ho raha hai...";
-
-
-const image_urls=[];
-
-
-if(files.length>0){
-
-uploadStatus.textContent =
-"Pictures uploading...";
-
-
-for(
-let i=0;
-i<files.length;
-i++
-){
-
-const file =
-files[i];
-
-
-const fileExt =
-file.name
-.split(".")
-.pop();
-
-
-const fileName =
-Date.now()+
-"-"+
-i+
-"-"+
-Math.random()
-.toString(36)
-.substring(2)+
-"."+
-fileExt;
-
-
-const {error:uploadError} =
-await supabase.storage
-.from("product-images")
-.upload(
-fileName,
-file
-);
-
-
-if(uploadError){
-
-msg.textContent =
-"Picture upload failed: "+
-uploadError.message;
-
-return;
-
-}
-
-
-const {data:publicData} =
-supabase.storage
-.from("product-images")
-.getPublicUrl(
-fileName
-);
-
-
-image_urls.push(
-publicData.publicUrl
-);
-
-}
-
-}
-
-
-const {error} =
-await supabase
-.from("products")
-.insert([{
-
-name:name,
-
-description:description,
-
-cost_price:cost,
-
-price:price,
-
-image_url:
-image_urls[0] || "",
-
-image_urls:image_urls
-
-}]);
-
-
-if(error){
-
-msg.textContent =
-"Product add nahi hua: "+
-error.message;
-
-return;
-
-}
-
-
-msg.textContent =
-"Product successfully add ho gaya with "+
-image_urls.length+
-" picture(s).";
-
-
-document
-.getElementById("productName")
-.value="";
-
-
-document
-.getElementById("productDescription")
-.value="";
-
-
-costInput.value="";
-
-sellingInput.value="";
-
-imageFiles.value="";
-
-imagePreview.innerHTML="";
-
-uploadStatus.textContent =
-"No pictures selected";
-
-
-calculateProfit();
-
-loadProducts();
-
-});
-
-
-/* GALLERY VARIABLES */
-
-let galleryImages=[];
-
-let galleryIndex=0;
-
-
-const galleryOverlay =
-document.getElementById(
-"galleryOverlay"
-);
-
-const galleryMain =
-document.getElementById(
-"galleryMain"
-);
-
-const galleryTitle =
-document.getElementById(
-"galleryTitle"
-);
-
-const galleryThumbnails =
-document.getElementById(
-"galleryThumbnails"
-);
-
-
-function getProductImages(product){
-
-let images=[];
-
-
-if(
-Array.isArray(product.image_urls)
-){
-
-images =
-product.image_urls
-.filter(Boolean);
-
-}
-
-
-if(
-images.length===0 &&
-product.image_url
-){
-
-images=[
-product.image_url
-];
-
-}
-
-
-return [
-...new Set(images)
-];
-
-}
-
-
-function openGallery(
-images,
-title
-){
-
-if(!images.length){
-return;
-}
-
-
-galleryImages=images;
-
-galleryIndex=0;
-
-galleryTitle.textContent =
-title || "Product";
-
-galleryOverlay.classList.add(
-"show"
-);
-
-renderGallery();
-
-}
-
-
-function renderGallery(){
-
-if(!galleryImages.length){
-return;
-}
-
-
-galleryMain.src =
-galleryImages[galleryIndex];
-
-
-galleryThumbnails.innerHTML="";
-
-
-galleryImages.forEach(
-(url,index)=>{
-
-const img =
-document.createElement("img");
-
-img.src=url;
-
-img.className =
-"gallery-thumb";
-
-
-if(index===galleryIndex){
-
-img.classList.add("active");
-
-}
-
-
-img.addEventListener(
-"click",
-()=>{
-
-galleryIndex=index;
-
-renderGallery();
-
-});
-
-
-galleryThumbnails.appendChild(
-img
-);
-
-});
-
-}
-
-
-function nextImage(){
-
-if(!galleryImages.length){
-return;
-}
-
-
-galleryIndex=
-(
-galleryIndex+1
-)%galleryImages.length;
-
-
-renderGallery();
-
-}
-
-
-function previousImage(){
-
-if(!galleryImages.length){
-return;
-}
-
-
-galleryIndex=
-(
-galleryIndex-1+
-galleryImages.length
-)%galleryImages.length;
-
-
-renderGallery();
-
-}
-
-
-document
-.getElementById("galleryNext")
-.addEventListener(
-"click",
-nextImage
-);
-
-
-document
-.getElementById("galleryPrev")
-.addEventListener(
-"click",
-previousImage
-);
-
-
-document
-.getElementById("galleryClose")
-.addEventListener(
-"click",
-()=>{
-
-galleryOverlay.classList.remove(
-"show"
-);
-
-});
-
-
-galleryOverlay.addEventListener(
-"click",
-event=>{
-
-if(
-event.target===
-galleryOverlay
-){
-
-galleryOverlay.classList.remove(
-"show"
-);
-
-}
-
-});
-
-
-document.addEventListener(
-"keydown",
-event=>{
-
-if(
-!galleryOverlay.classList.contains(
-"show"
-)
-){
-
-return;
-
-}
-
-
-if(event.key==="Escape"){
-
-galleryOverlay.classList.remove(
-"show"
-);
-
-}
-
-
-if(event.key==="ArrowRight"){
-
-nextImage();
-
-}
-
-
-if(event.key==="ArrowLeft"){
-
-previousImage();
-
-}
-
-});
-  async function loadProducts(){
-
-const {data,error} =
-await supabase
-.from("products")
-.select("*")
-.order(
-"id",
-{ascending:false}
-);
-
-
-const table =
-document
-.getElementById("productsTable");
-
-
-if(error){
-
-table.innerHTML=
-`
-<tr>
-<td colspan="6">
-${error.message}
-</td>
-</tr>
-`;
-
-return;
-
-}
-
-
-table.innerHTML =
-(data || [])
-.map(product=>{
-
-const images =
-getProductImages(product);
-
-
-const firstImage =
-images[0];
-
-
-const pictureCount =
-images.length;
-
-
-const profit =
-Number(product.price)-
-Number(
-product.cost_price || 0
-);
-
-
-return `
-
-<tr>
-
-<td>
-
-${
-firstImage
-
-?
-
-`
-<img
-class="product-image"
-src="${firstImage}"
-alt="${product.name}"
-data-product-id="${product.id}"
-title="Click to view all pictures">
-`
-
-:
-
-"📦"
-
-}
-
-<br>
-
-<small class="picture-count">
-
-${
-pictureCount
-}
-
-picture(s)
-
-</small>
-
-</td>
-
-
-<td>
-
-${product.name || ""}
-
-</td>
-
-
-<td>
-
-Rs.
-${Number(
-product.cost_price || 0
-).toLocaleString()}
-
-</td>
-
-
-<td>
-
-Rs.
-${Number(
-product.price || 0
-).toLocaleString()}
-
-</td>
-
-
-<td class="profit">
-
-Rs.
-${profit.toLocaleString()}
-
-</td>
-
-
-<td>
-
-<button
-class="danger delete-product"
-data-id="${product.id}">
-
-Delete
-
-</button>
-
-</td>
-
-</tr>
-
-`;
-
-})
-.join("");
-
-
-/* CLICK IMAGE TO OPEN GALLERY */
-
-(data || []).forEach(product=>{
-
-const image =
-document.querySelector(
-`[data-product-id="${product.id}"]`
-);
-
-
-if(image){
-
-image.addEventListener(
-"click",
-()=>{
-
-openGallery(
-getProductImages(product),
-product.name
-);
-
-});
-
-}
-
-
-const deleteButton =
-document.querySelector(
-`.delete-product[data-id="${product.id}"]`
-);
-
-
-if(deleteButton){
-
-deleteButton.addEventListener(
-"click",
-()=>{
-
-deleteProduct(product.id);
-
-});
-
-}
-
-});
-
-}
-
-
-async function deleteProduct(id){
-
-if(
-!confirm(
-"Kya aap ye product delete karna chahte hain?"
-)
-){
-
-return;
-
-}
-
-
-const {error} =
-await supabase
-.from("products")
-.delete()
-.eq("id",id);
-
-
-if(error){
-
-alert(
-"Delete failed: "+
-error.message
-);
-
-return;
-
-}
-
-
-loadProducts();
-
-}
-
+/* LOAD ORDERS */
 
 async function loadOrders(){
 
-const {data,error} =
-await supabase
-.from("orders")
-.select("*")
-.order(
-"id",
-{ascending:false}
+  const {
+    data,
+    error
+  } =
+  await supabase
+  .from("orders")
+  .select("*")
+  .order(
+    "id",
+    {
+      ascending:false
+    }
+  );
+
+
+  if(error){
+
+    console.error(error);
+
+    document
+    .getElementById(
+      "ordersTable"
+    )
+    .innerHTML =
+    `<div class="empty-orders">
+      Orders load nahi ho rahe.
+    </div>`;
+
+    return;
+
+  }
+
+
+  orders =
+    data || [];
+
+
+  renderOrders();
+
+}
+
+
+/* RENDER ORDERS */
+
+function renderOrders(){
+
+  const container =
+    document
+    .getElementById(
+      "ordersTable"
+    );
+
+
+  document
+  .getElementById(
+    "orderCount"
+  )
+  .textContent =
+    orders.length;
+
+
+  if(orders.length === 0){
+
+    container.innerHTML =
+    `<div class="empty-orders">
+      Abhi koi order nahi hai.
+    </div>`;
+
+    return;
+
+  }
+
+
+  container.innerHTML = `
+
+    <div class="order-row header-row">
+
+      <div>Customer</div>
+      <div>Phone</div>
+      <div>Address</div>
+      <div>Total</div>
+      <div>Status</div>
+
+    </div>
+
+
+    ${
+      orders
+      .map(order => {
+
+        return `
+
+          <div class="order-row">
+
+            <div>
+
+              <b>
+                ${escapeHtml(
+                  order.customer_name || ""
+                )}
+              </b>
+
+              <div class="product-small">
+
+                Order #${order.id}
+
+              </div>
+
+            </div>
+
+
+            <div>
+
+              ${escapeHtml(
+                order.phone || ""
+              )}
+
+            </div>
+
+
+            <div>
+
+              ${escapeHtml(
+                order.address || ""
+              )}
+
+              ${
+                order.notes
+
+                ?
+
+                `<div class="product-small">
+
+                  ${escapeHtml(
+                    order.notes
+                  )}
+
+                </div>`
+
+                :
+
+                ""
+
+              }
+
+            </div>
+
+
+            <div class="admin-price">
+
+              Rs.
+              ${Number(
+                order.total || 0
+              ).toLocaleString()}
+
+            </div>
+
+
+            <div>
+
+              <span class="status-badge">
+
+                ${escapeHtml(
+                  order.status || "New"
+                )}
+
+              </span>
+
+            </div>
+
+          </div>
+
+        `;
+
+      })
+      .join("")
+    }
+
+  `;
+
+}
+
+
+/* IMAGE PREVIEW */
+
+window.showImage =
+function(url){
+
+  document
+  .getElementById(
+    "previewImage"
+  )
+  .src = url;
+
+
+  document
+  .getElementById(
+    "imagePreviewOverlay"
+  )
+  .classList
+  .add("active");
+
+};
+
+
+document
+.getElementById(
+  "closeImagePreview"
+)
+.addEventListener(
+  "click",
+  () => {
+
+    document
+    .getElementById(
+      "imagePreviewOverlay"
+    )
+    .classList
+    .remove("active");
+
+  }
 );
 
 
-const table =
+/* DELETE PRODUCT */
+
+window.askDelete =
+function(id){
+
+  deleteProductId =
+    id;
+
+
+  document
+  .getElementById(
+    "deleteOverlay"
+  )
+  .classList
+  .add("active");
+
+};
+
+
 document
-.getElementById("ordersTable");
+.getElementById(
+  "cancelDelete"
+)
+.addEventListener(
+  "click",
+  () => {
+
+    deleteProductId = null;
+
+    document
+    .getElementById(
+      "deleteOverlay"
+    )
+    .classList
+    .remove("active");
+
+  }
+);
 
 
-if(error){
+document
+.getElementById(
+  "confirmDelete"
+)
+.addEventListener(
+  "click",
+  async () => {
 
-table.innerHTML=
-`
-<tr>
-<td colspan="5">
-${error.message}
-</td>
-</tr>
-`;
+    if(!deleteProductId){
 
-return;
+      return;
+
+    }
+
+
+    const {
+      error
+    } =
+    await supabase
+    .from("products")
+    .delete()
+    .eq(
+      "id",
+      deleteProductId
+    );
+
+
+    if(error){
+
+      alert(
+        "Delete error: " +
+        error.message
+      );
+
+      return;
+
+    }
+
+
+    deleteProductId = null;
+
+
+    document
+    .getElementById(
+      "deleteOverlay"
+    )
+    .classList
+    .remove("active");
+
+
+    await loadProducts();
+
+  }
+);
+
+
+/* ADD PRODUCT */
+
+document
+.getElementById(
+  "addProductBtn"
+)
+.addEventListener(
+  "click",
+  async () => {
+
+    const name =
+      document
+      .getElementById(
+        "productName"
+      )
+      .value
+      .trim();
+
+
+    const description =
+      document
+      .getElementById(
+        "productDescription"
+      )
+      .value
+      .trim();
+
+
+    const cost =
+      Number(
+        document
+        .getElementById(
+          "costPrice"
+        )
+        .value
+      );
+
+
+    const price =
+      Number(
+        document
+        .getElementById(
+          "sellingPrice"
+        )
+        .value
+      );
+
+
+    const pictures =
+      document
+      .getElementById(
+        "productPictures"
+      ).files;
+
+
+    const message =
+      document
+      .getElementById(
+        "productMsg"
+      );
+
+
+    if(!name){
+
+      message.textContent =
+        "Product name required.";
+
+      return;
+
+    }
+
+
+    if(!price){
+
+      message.textContent =
+        "Selling price required.";
+
+      return;
+
+    }
+
+
+    if(
+      !pictures ||
+      pictures.length === 0
+    ){
+
+      message.textContent =
+        "Kam az kam 1 picture select karein.";
+
+      return;
+
+    }
+
+
+    if(pictures.length > 5){
+
+      message.textContent =
+        "Maximum 5 pictures allowed.";
+
+      return;
+
+    }
+
+
+    message.textContent =
+      "Product upload ho raha hai...";
+
+
+    const imageUrls = [];
+
+
+    for(
+      let i = 0;
+      i < pictures.length;
+      i++
+    ){
+
+      const file =
+        pictures[i];
+
+
+      const fileName =
+        Date.now() +
+        "-" +
+        i +
+        "-" +
+        Math.random()
+        .toString(36)
+        .substring(2,10) +
+        "." +
+        file.name
+        .split(".")
+        .pop();
+
+
+      const {
+        error:uploadError
+      } =
+      await supabase
+      .storage
+      .from("product-images")
+      .upload(
+        fileName,
+        file,
+        {
+          upsert:false
+        }
+      );
+
+
+      if(uploadError){
+
+        message.textContent =
+          "Image upload error: " +
+          uploadError.message;
+
+        return;
+
+      }
+
+
+      const {
+        data:urlData
+      } =
+      supabase
+      .storage
+      .from("product-images")
+      .getPublicUrl(
+        fileName
+      );
+
+
+      imageUrls.push(
+        urlData.publicUrl
+      );
+
+    }
+
+
+    const {
+      error
+    } =
+    await supabase
+    .from("products")
+    .insert([{
+
+      name:name,
+
+      description:description,
+
+      cost_price:cost,
+
+      price:price,
+
+      image_urls:imageUrls,
+
+      image_url:imageUrls[0]
+
+    }]);
+
+
+    if(error){
+
+      message.textContent =
+        "Product save error: " +
+        error.message;
+
+      return;
+
+    }
+
+
+    message.textContent =
+      "✅ Product successfully add ho gaya!";
+
+
+    document
+    .getElementById(
+      "productName"
+    )
+    .value = "";
+
+
+    document
+    .getElementById(
+      "productDescription"
+    )
+    .value = "";
+
+
+    document
+    .getElementById(
+      "costPrice"
+    )
+    .value = "";
+
+
+    document
+    .getElementById(
+      "sellingPrice"
+    )
+    .value = "";
+
+
+    document
+    .getElementById(
+      "productPictures"
+    )
+    .value = "";
+
+
+    await loadProducts();
+
+  }
+);
+
+
+/* CLOSE OVERLAYS */
+
+document
+.addEventListener(
+  "keydown",
+  event => {
+
+    if(
+      event.key === "Escape"
+    ){
+
+      document
+      .getElementById(
+        "imagePreviewOverlay"
+      )
+      .classList
+      .remove("active");
+
+
+      document
+      .getElementById(
+        "deleteOverlay"
+      )
+      .classList
+      .remove("active");
+
+    }
+
+  }
+);
+
+
+/* ESCAPE HTML */
+
+function escapeHtml(text){
+
+  return String(text)
+    .replace(
+      /[&<>'"]/g,
+      function(char){
+
+        return {
+
+          "&":"&amp;",
+
+          "<":"&lt;",
+
+          ">":"&gt;",
+
+          "'":"&#39;",
+
+          '"':"&quot;"
+
+        }[char];
+
+      }
+    );
 
 }
 
 
-table.innerHTML =
-(data || [])
-.map(order=>{
+/* START */
 
-return `
+loadProducts();
 
-<tr>
-
-<td>
-${order.customer_name || ""}
-</td>
-
-<td>
-${order.phone || ""}
-</td>
-
-<td>
-${order.address || ""}
-</td>
-
-<td>
-Rs.
-${Number(
-order.total || 0
-).toLocaleString()}
-</td>
-
-<td>
-${order.status || "New"}
-</td>
-
-</tr>
-
-`;
-
-})
-.join("");
-
-}
-
-
-checkLogin();
+loadOrders();
 
 </script>
 
 </body>
 </html>
+
+<!-- PART 3 END -->
