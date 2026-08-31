@@ -320,6 +320,7 @@ body{
   display:flex;
   align-items:center;
   justify-content:center;
+  overflow:hidden;
 }
 
 .product-image img{
@@ -451,7 +452,7 @@ body{
 }
 
 /* =========================
-   GALLERY
+   DARAZ STYLE GALLERY
 ========================= */
 
 .gallery{
@@ -467,6 +468,7 @@ body{
   align-items:center;
   justify-content:center;
   overflow:hidden;
+  border:1px solid #eee;
 }
 
 .main-image img{
@@ -475,20 +477,29 @@ body{
   object-fit:contain;
   cursor:zoom-in;
   user-select:none;
+  transition:opacity .15s ease;
 }
 
 .gallery-arrow{
   position:absolute;
   top:50%;
   transform:translateY(-50%);
-  width:42px;
-  height:65px;
+  width:44px;
+  height:70px;
   border:0;
-  background:#0007;
+  background:rgba(0,0,0,.45);
   color:#fff;
-  font-size:38px;
+  font-size:40px;
   cursor:pointer;
-  z-index:3;
+  z-index:5;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:.2s;
+}
+
+.gallery-arrow:hover{
+  background:rgba(248,86,6,.9);
 }
 
 .gallery-arrow.left{
@@ -499,28 +510,38 @@ body{
   right:0;
 }
 
+/* =========================
+   THUMBNAILS
+========================= */
+
 .thumbnails{
   display:flex;
   gap:10px;
   margin-top:12px;
   overflow-x:auto;
-  padding:4px 2px 8px;
+  padding:5px 3px 10px;
+  scrollbar-width:thin;
 }
 
 .thumbnail{
-  width:78px;
-  height:78px;
+  width:82px;
+  height:82px;
   flex:none;
   object-fit:cover;
   border:2px solid transparent;
-  border-radius:5px;
+  border-radius:6px;
   cursor:pointer;
   background:#f5f5f5;
-  transition:.15s;
+  transition:
+    border-color .15s ease,
+    transform .15s ease,
+    opacity .15s ease;
 }
 
 .thumbnail:hover{
-  border-color:#ff9d70;
+  border-color:#f85606;
+  transform:scale(1.04);
+  opacity:1;
 }
 
 .thumbnail.active{
@@ -867,6 +888,10 @@ body{
   z-index:5;
 }
 
+.lightbox-arrow:hover{
+  background:#f85606;
+}
+
 .lightbox-arrow.left{
   left:20px;
 }
@@ -1047,6 +1072,12 @@ body{
 
   .buy-buttons{
     flex-direction:column;
+  }
+
+  .gallery-arrow{
+    width:38px;
+    height:58px;
+    font-size:34px;
   }
 }
 </style>
@@ -1321,7 +1352,9 @@ body{
         </div>
 
         <div class="gallery-info">
-          📷 Click thumbnails or use arrows to view pictures
+          🖱️ Mouse thumbnail par le jayein ya click karein
+          <br>
+          ◀ ▶ Arrows se bhi pictures change karein
         </div>
 
       </div>
@@ -1980,6 +2013,11 @@ function renderProducts(){
             );
 
 
+          /*
+            PRODUCT CARD:
+            ONLY FIRST IMAGE SHOW
+          */
+
           const image =
             images[0] ||
             "";
@@ -2287,7 +2325,7 @@ document
 
 
 /* =========================
-   RENDER GALLERY
+   RENDER DARAZ GALLERY
 ========================= */
 
 function renderDetailImage(){
@@ -2299,11 +2337,11 @@ function renderDetailImage(){
 
 
   /*
-    MAIN IMAGE
+    MAIN BIG IMAGE
   */
 
   if(
-    currentImages.length
+    currentImages.length > 0
   ){
 
     mainImage.src =
@@ -2354,11 +2392,25 @@ function renderDetailImage(){
               src="${image}"
               alt="Product picture ${index + 1}"
               loading="lazy"
+
+              /*
+                CLICK
+              */
+
               onclick="
-                selectImage(
-                  ${index}
-                )
-              ">
+                selectImage(${index})
+              "
+
+              /*
+                MOUSE HOVER
+                DARAZ STYLE
+              */
+
+              onmouseenter="
+                selectImage(${index})
+              "
+
+            >
 
           `;
 
@@ -2370,7 +2422,7 @@ function renderDetailImage(){
 
 
 /* =========================
-   SELECT THUMBNAIL
+   SELECT IMAGE
 ========================= */
 
 window.selectImage =
@@ -2394,8 +2446,7 @@ function(index){
 
 
   /*
-    If lightbox is open,
-    update it too
+    LIGHTBOX ALSO UPDATE
   */
 
   const lightbox =
@@ -2481,7 +2532,7 @@ function previousImage(){
 
 
 /* =========================
-   GALLERY BUTTONS
+   GALLERY ARROWS
 ========================= */
 
 document
@@ -3065,9 +3116,9 @@ function setCategory(
 }
 
 
-/*
-  NAV BUTTONS
-*/
+/* =========================
+   NAV BUTTONS
+========================= */
 
 document
   .querySelectorAll(
@@ -3097,9 +3148,9 @@ document
   );
 
 
-/*
-  CATEGORY CARDS
-*/
+/* =========================
+   CATEGORY CARDS
+========================= */
 
 document
   .querySelectorAll(
@@ -3321,10 +3372,6 @@ function handleSwipe(){
     touchEndX;
 
 
-  /*
-    Minimum swipe distance
-  */
-
   if(
     Math.abs(difference) < 50
   ){
@@ -3349,9 +3396,9 @@ function handleSwipe(){
 }
 
 
-/*
-  Product main image swipe
-*/
+/* =========================
+   MAIN IMAGE SWIPE
+========================= */
 
 const mainImage =
   document.getElementById(
@@ -3389,9 +3436,9 @@ mainImage.addEventListener(
 );
 
 
-/*
-  Lightbox swipe
-*/
+/* =========================
+   LIGHTBOX SWIPE
+========================= */
 
 const lightboxImage =
   document.getElementById(
